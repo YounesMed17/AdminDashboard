@@ -4,99 +4,105 @@ import {
   HiOutlineUser,
   HiOutlineUsers,
   HiOutlineCube,
-  HiOutlineClipboardDocumentList,
   HiOutlineDocumentChartBar,
   HiOutlinePencilSquare,
   HiOutlineCalendarDays,
   HiOutlinePresentationChartBar,
   HiOutlineDocumentText,
   HiOutlineArrowLeftOnRectangle,
-} from 'react-icons/hi2';
+} from "react-icons/hi2";
 // import { IoSettingsOutline } from 'react-icons/io5';
 
 export const menu = [
   {
-    catalog: 'main',
+    catalog: "main",
     listItems: [
       {
         isLink: true,
-        url: '/',
+        url: "/",
         icon: HiOutlineHome,
-        label: 'homepage',
+        label: "homepage",
       },
       {
         isLink: true,
-        url: '/profile',
+        url: "/profile",
         icon: HiOutlineUser,
-        label: 'profile',
+        label: "profile",
       },
     ],
   },
   {
-    catalog: 'lists',
+    catalog: "lists",
     listItems: [
       {
         isLink: true,
-        url: '/users',
+        url: "/freelancers",
         icon: HiOutlineUsers,
-        label: 'users',
+        label: "Freelancers",
+      },
+
+      {
+        isLink: true,
+        url: "/clients",
+        icon: HiOutlineUsers,
+        label: "Clients",
       },
       {
         isLink: true,
-        url: '/products',
+        url: "/VIPclients",
+        icon: HiOutlineUsers,
+        label: "VIP Clients",
+      },
+      {
+        isLink: true,
+        url: "/projects",
         icon: HiOutlineCube,
-        label: 'products',
+        label: "Projects",
       },
       {
         isLink: true,
-        url: '/orders',
-        icon: HiOutlineClipboardDocumentList,
-        label: 'orders',
-      },
-      {
-        isLink: true,
-        url: '/posts',
+        url: "/posts",
         icon: HiOutlineDocumentChartBar,
-        label: 'posts',
+        label: "posts",
       },
     ],
   },
   {
-    catalog: 'general',
+    catalog: "general",
     listItems: [
       {
         isLink: true,
-        url: '/notes',
+        url: "/notes",
         icon: HiOutlinePencilSquare,
-        label: 'notes',
+        label: "notes",
       },
       {
         isLink: true,
-        url: '/calendar',
+        url: "/calendar",
         icon: HiOutlineCalendarDays,
-        label: 'calendar',
+        label: "calendar",
       },
     ],
   },
   {
-    catalog: 'analytics',
+    catalog: "analytics",
     listItems: [
       {
         isLink: true,
-        url: '/charts',
+        url: "/charts",
         icon: HiOutlinePresentationChartBar,
-        label: 'charts',
+        label: "charts",
       },
       {
         isLink: true,
-        url: '/logs',
+        url: "/logs",
         icon: HiOutlineDocumentText,
-        label: 'logs',
+        label: "logs",
       },
     ],
   },
   {
-    catalog: 'miscellaneous',
+    catalog: "miscellaneous",
     listItems: [
       // {
       //   isLink: true,
@@ -106,9 +112,9 @@ export const menu = [
       // },
       {
         isLink: true,
-        url: '/login',
+        url: "/login",
         icon: HiOutlineArrowLeftOnRectangle,
-        label: 'log out',
+        label: "log out",
       },
     ],
   },

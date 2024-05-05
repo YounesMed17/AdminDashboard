@@ -1,148 +1,232 @@
 // import React from 'react';
-import TopDealsBox from '../components/topDealsBox/TopDealsBox';
-import ChartBox from '../components/charts/ChartBox';
-import { useQuery } from '@tanstack/react-query';
-import {
-  MdGroup,
-  MdInventory2,
-  MdAssessment,
-  MdSwapHorizontalCircle,
-} from 'react-icons/md';
-import {
-  fetchTotalProducts,
-  fetchTotalProfit,
-  fetchTotalRatio,
-  fetchTotalRevenue,
-  fetchTotalRevenueByProducts,
-  fetchTotalSource,
-  fetchTotalUsers,
-  fetchTotalVisit,
-} from '../api/ApiCollection';
+import { useEffect, useState } from "react";
+import TopDealsBox from "../components/topDealsBox/TopDealsBox";
+
+import { MdGroup, MdAssessment } from "react-icons/md";
+import { get } from "../utilFunctions/getData";
 
 const Home = () => {
-  const queryGetTotalUsers = useQuery({
-    queryKey: ['totalusers'],
-    queryFn: fetchTotalUsers,
-  });
+  const [usersCount, setUsersCount] = useState(0);
+  const [freelancersCount, setFreelancersCount] = useState(0);
+  const [clientsCount, setClientsCount] = useState(0);
+  const [VIPClientsCount, setVIPClientsCount] = useState(0);
+  const [doneProjects, setDoneProjects] = useState(0);
+  const [inProgressProjects, setInProgressProjects] = useState(0);
+  const [onHoldProjects, setOnHoldProjects] = useState(0);
+  const [totalRevenu, setTotalRevenu] = useState(0);
+  const [allProjectsCount, setAllProjectsCount] = useState(0);
 
-  const queryGetTotalProducts = useQuery({
-    queryKey: ['totalproducts'],
-    queryFn: fetchTotalProducts,
-  });
+  useEffect(() => {
+    async function fetchData() {
+      const res = await get(
+        "http://localhost:3001/api/project/getallProjectsCount"
+      );
+      setAllProjectsCount(res.projectCount);
+    }
 
-  const queryGetTotalRatio = useQuery({
-    queryKey: ['totalratio'],
-    queryFn: fetchTotalRatio,
-  });
+    fetchData();
+  }, []);
 
-  const queryGetTotalRevenue = useQuery({
-    queryKey: ['totalrevenue'],
-    queryFn: fetchTotalRevenue,
-  });
+  useEffect(() => {
+    async function fetchData() {
+      const res = await get(
+        "http://localhost:3001/api/project/getDoneProjectsCount"
+      );
+      setDoneProjects(res.projectCount);
+    }
 
-  const queryGetTotalSource = useQuery({
-    queryKey: ['totalsource'],
-    queryFn: fetchTotalSource,
-  });
+    fetchData();
+  }, []);
 
-  const queryGetTotalRevenueByProducts = useQuery({
-    queryKey: ['totalrevenue-by-products'],
-    queryFn: fetchTotalRevenueByProducts,
-  });
+  useEffect(() => {
+    async function fetchData() {
+      const res = await get(
+        "http://localhost:3001/api/project/getTotalPriceProjectsSum"
+      );
+      setTotalRevenu(res.totalPriceSum);
+    }
 
-  const queryGetTotalVisit = useQuery({
-    queryKey: ['totalvisit'],
-    queryFn: fetchTotalVisit,
-  });
+    fetchData();
+  }, []);
+  useEffect(() => {
+    async function fetchData() {
+      const res = await get(
+        "http://localhost:3001/api/project/getnotAssignedProjectsCount"
+      );
+      setOnHoldProjects(res.projectCount);
+    }
 
-  const queryGetTotalProfit = useQuery({
-    queryKey: ['totalprofit'],
-    queryFn: fetchTotalProfit,
-  });
+    fetchData();
+  }, []);
+  useEffect(() => {
+    async function fetchData() {
+      const res = await get(
+        "http://localhost:3001/api/project/getinProgressProjectsCount"
+      );
+      setInProgressProjects(res.projectCount);
+    }
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      const res = await get("http://localhost:3001/api/user/getUsersCount");
+      setUsersCount(res.usersCount);
+    }
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      const res = await get(
+        "http://localhost:3001/api/user/getfreelancersCount"
+      );
+      setFreelancersCount(res.freelancerCount);
+    }
+
+    fetchData();
+  }, []);
+  useEffect(() => {
+    async function fetchData() {
+      const res = await get("http://localhost:3001/api/user/getClientsCount");
+      setClientsCount(res.clientCount);
+    }
+
+    fetchData();
+  }, []);
+  useEffect(() => {
+    async function fetchData() {
+      const res = await get(
+        "http://localhost:3001/api/user/getVIPClientsCount"
+      );
+      setVIPClientsCount(res.VIPClientCount);
+    }
+
+    fetchData();
+  }, []);
 
   return (
     // screen
     <div className="home w-full p-0 m-0">
       {/* grid */}
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 grid-flow-dense auto-rows-[minmax(200px,auto)] xl:auto-rows-[minmax(150px,auto)] gap-3 xl:gap-3 px-0">
-        <div className="box col-span-full sm:col-span-1 xl:col-span-1 row-span-3 3xl:row-span-5">
-          <TopDealsBox />
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 grid-flow-dense auto-rows-[minmax(200px,200px)] xl:auto-rows-[minmax(150px,200px)] gap-3 xl:gap-3 px-0">
+        <div
+          className=" bg-slate-200 box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
+          style={{ height: "150px", fontSize: "1.5rem" }}
+        >
+          <div className="flex justify-start items-start">
+            <MdAssessment style={{ fontSize: "2rem" }} />
+            <p style={{ fontSize: "1.5rem", marginLeft: "10px" }}>
+              All projects Revenu:
+            </p>
+          </div>
+          <p style={{ fontSize: "2rem" }}>{totalRevenu} DT</p>
         </div>
-        <div className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2">
-          <ChartBox
-            chartType={'line'}
-            IconBox={MdGroup}
-            title="Total Users"
-            {...queryGetTotalUsers.data}
-            isLoading={queryGetTotalUsers.isLoading}
-            isSuccess={queryGetTotalUsers.isSuccess}
-          />
+
+        <div
+          className="bg-red-300		 box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
+          style={{ height: "150px", fontSize: "1.5rem" }}
+        >
+          <div className="flex justify-start items-start">
+            <MdAssessment style={{ fontSize: "2rem" }} />
+            <p style={{ fontSize: "1.5rem", marginLeft: "10px" }}>
+              All projects number:
+            </p>
+          </div>
+          <p style={{ fontSize: "2rem" }}>{allProjectsCount}</p>
         </div>
-        <div className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2">
-          <ChartBox
-            chartType={'line'}
-            IconBox={MdInventory2}
-            title="Total Products"
-            {...queryGetTotalProducts.data}
-            isLoading={queryGetTotalProducts.isLoading}
-            isSuccess={queryGetTotalProducts.isSuccess}
-          />
+
+        <div
+          className="bg-orange-300 box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
+          style={{ height: "150px", fontSize: "1.5rem" }}
+        >
+          <div className="flex justify-start items-start">
+            <MdAssessment style={{ fontSize: "2rem" }} />
+            <p style={{ fontSize: "1.5rem", marginLeft: "10px" }}>
+              All done projects number:
+            </p>
+          </div>
+          <p style={{ fontSize: "2rem" }}>{doneProjects}</p>
         </div>
-        <div className="box row-span-3 col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-5">
-          <ChartBox
-            chartType={'pie'}
-            title="Leads by Source"
-            {...queryGetTotalSource.data}
-            isLoading={queryGetTotalSource.isLoading}
-            isSuccess={queryGetTotalSource.isSuccess}
-          />
+
+        <div
+          className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
+          style={{ height: "150px", fontSize: "1.5rem" }}
+        >
+          <div className="flex justify-start items-start">
+            <MdAssessment style={{ fontSize: "2rem" }} />
+            <p style={{ fontSize: "1.5rem", marginLeft: "10px" }}>
+              All in progress projects number:
+            </p>
+          </div>
+          <p style={{ fontSize: "2rem" }}>{inProgressProjects}</p>
         </div>
-        <div className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2">
-          <ChartBox
-            chartType={'line'}
-            IconBox={MdAssessment}
-            title="Total Ratio"
-            {...queryGetTotalRatio.data}
-            isLoading={queryGetTotalRatio.isLoading}
-            isSuccess={queryGetTotalRatio.isSuccess}
-          />
+
+        <div
+          className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
+          style={{ height: "150px", fontSize: "1.5rem" }}
+        >
+          <div className="flex justify-start items-start">
+            <MdAssessment style={{ fontSize: "2rem" }} />
+            <p style={{ fontSize: "1.5rem", marginLeft: "10px" }}>
+              All not assigned projects number:
+            </p>
+          </div>
+          <p style={{ fontSize: "2rem" }}>{onHoldProjects}</p>
         </div>
-        <div className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2">
-          <ChartBox
-            chartType={'line'}
-            IconBox={MdSwapHorizontalCircle}
-            title="Total Revenue"
-            {...queryGetTotalRevenue.data}
-            isLoading={queryGetTotalRevenue.isLoading}
-            isSuccess={queryGetTotalRevenue.isSuccess}
-          />
+
+        <div
+          className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
+          style={{ height: "150px", fontSize: "1.5rem" }}
+        >
+          <div className="flex justify-start items-start">
+            <MdGroup style={{ fontSize: "2rem" }} />
+            <p style={{ fontSize: "1.5rem", marginLeft: "10px" }}>
+              All users number:
+            </p>
+          </div>
+          <p style={{ fontSize: "2rem" }}>{usersCount}</p>
         </div>
-        <div className="box row-span-2 col-span-full xl:col-span-2 3xl:row-span-3">
-          <ChartBox
-            chartType={'area'}
-            title="Revenue by Products"
-            {...queryGetTotalRevenueByProducts.data}
-            isLoading={queryGetTotalRevenueByProducts.isLoading}
-            isSuccess={queryGetTotalRevenueByProducts.isSuccess}
-          />
+
+        <div
+          className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
+          style={{ height: "150px", fontSize: "1.5rem" }}
+        >
+          <div className="flex justify-start items-start">
+            <MdGroup style={{ fontSize: "2rem" }} />
+            <p style={{ fontSize: "1.5rem", marginLeft: "10px" }}>
+              All VIP clients number:
+            </p>
+          </div>
+          <p style={{ fontSize: "2rem" }}>{VIPClientsCount || 0}</p>
         </div>
-        <div className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2">
-          <ChartBox
-            chartType={'bar'}
-            title="Total Visit"
-            {...queryGetTotalVisit.data}
-            isLoading={queryGetTotalVisit.isLoading}
-            isSuccess={queryGetTotalVisit.isSuccess}
-          />
+
+        <div
+          className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
+          style={{ height: "150px", fontSize: "1.5rem" }}
+        >
+          <div className="flex justify-start items-start">
+            <MdGroup style={{ fontSize: "2rem" }} />
+            <p style={{ fontSize: "1.5rem", marginLeft: "10px" }}>
+              All freelancers number :
+            </p>
+          </div>
+          <p style={{ fontSize: "2rem" }}>{freelancersCount}</p>
         </div>
-        <div className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2">
-          <ChartBox
-            chartType={'bar'}
-            title="Total Profit"
-            {...queryGetTotalProfit.data}
-            isLoading={queryGetTotalProfit.isLoading}
-            isSuccess={queryGetTotalProfit.isSuccess}
-          />
+
+        <div
+          className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
+          style={{ height: "150px", fontSize: "1.5rem" }}
+        >
+          <div className="flex justify-start items-start">
+            <MdGroup style={{ fontSize: "2rem" }} />
+            <p style={{ fontSize: "1.5rem", marginLeft: "10px" }}>
+              All clients number:
+            </p>
+          </div>
+          <p style={{ fontSize: "2rem" }}>{clientsCount}</p>
         </div>
       </div>
     </div>

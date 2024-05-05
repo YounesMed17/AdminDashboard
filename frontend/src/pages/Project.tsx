@@ -2,44 +2,45 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { get } from "../utilFunctions/getData";
 
-const User = () => {
+const Project = () => {
   const { id } = useParams();
 
-  const [user, setUser] = React.useState<any[]>([]);
+  const [project, setProject] = React.useState<any[]>([]);
 
   useEffect(() => {
     async function fetchData() {
-      const res = await get(`http://localhost:3001/api/user/${id}`);
+      const res = await get(`http://localhost:3001/api/project/${id}`);
       const item = await res;
       // Parse createdAt string into Date object
       const createdAtDate = new Date(item.creationDate);
-
+      const deadline = new Date(item.deadLine);
       // Format date to desired format (day-month-year)
-      const formattedDate = `${createdAtDate.getDate()}-${
+      const formattedDate1 = `${createdAtDate.getDate()}-${
         createdAtDate.getMonth() + 1
       }-${createdAtDate.getFullYear()}`;
+      const formattedDate2 = `${deadline.getDate()}-${
+        deadline.getMonth() + 1
+      }-${deadline.getFullYear()}`;
 
-      const User = {
+      const Project = {
         id: item.id,
-        firstName: item.first_name,
-        lastName: item.last_name,
-        email: item.email,
-        phone: 20668574,
-        createdAt: formattedDate,
+        name: item.name,
+        description: item.description,
+        deadline: formattedDate2,
         status: item.status,
-        verified: false,
-        strikes: item.strikesNbr,
+        createdAt: formattedDate1,
+        totalPrice: item.totalPrice,
       };
 
-      setUser(User);
+      setProject(Project);
     }
 
     fetchData();
   }, []);
-
+  console.log(project.length + "aaaaaaaaaaaa");
   return (
     // screen
-    <div id="singleUser" className="w-full p-0 m-0">
+    <div id="singleProject" className="w-full p-0 m-0">
       {/* container */}
       <div className="w-full grid xl:grid-cols-2 gap-10 mt-5 xl:mt-0">
         {/* column 1 */}
@@ -56,7 +57,7 @@ const User = () => {
                 </div>
                 <div className="flex flex-col items-start gap-1">
                   <h3 className="font-semibold text-xl xl:text-3xl dark:text-white">
-                    {user.firstName} {user.lastName}
+                    {project.name}
                   </h3>
 
                   <span className="font-normal text-base">Member</span>
@@ -68,21 +69,17 @@ const User = () => {
               <div className="w-full grid grid-cols-3 xl:flex gap-5 xl:gap-8">
                 {/* column 1 */}
                 <div className="col-span-1 flex flex-col items-start gap-3 xl:gap-5">
-                  <span>First Name</span>
-                  <span>Last Name</span>
-                  <span>Email</span>
-                  <span>Phone</span>
+                  <span>Title</span>
+                  <span>description</span>
                   <span>Status</span>
+                  <span>Deadline</span>
                 </div>
                 {/* column 2 */}
                 <div className="col-span-2 flex flex-col items-start gap-3 xl:gap-5">
-                  <span className="font-semibold">{user.firstName}</span>
-                  <span className="font-semibold">{user.lastName}</span>
-                  <span className="font-semibold">{user.email}</span>
-                  <span className="font-semibold">{user.phone}</span>
-                  <span className="font-semibold">
-                    {user.verified ? "Verified" : "Not Verified"}
-                  </span>
+                  <span className="font-semibold">{project.name}</span>
+                  <span className="font-semibold">{project.description}</span>
+                  <span className="font-semibold">{project.status}</span>
+                  <span className="font-semibold">{project.deadline}</span>
                 </div>
               </div>
             </div>
@@ -93,4 +90,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default Project;
