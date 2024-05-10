@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import {
@@ -24,23 +24,7 @@ const DataTable: React.FC<DataTableProps> = ({
   rows,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  /*
-  const prevIsOpenRef = React.useRef<boolean>();
-  useEffect(() => {
-    prevIsOpenRef.current = isOpen;
-  }, [isOpen]);
 
-  const prevIsOpen = prevIsOpenRef.current;
-
-  useEffect(() => {
-    // Check if isOpen was true and changed to false
-    if (prevIsOpen && !isOpen) {
-      setTimeout(function () {
-        // Code to refresh the page
-        window.location.reload();
-      }, 200);
-    }
-  }, [isOpen, prevIsOpen]);*/
   const [valuesToUpdate, setValuesToUpdate] = useState<any>({
     id: 0,
     title: "",
@@ -57,9 +41,38 @@ const DataTable: React.FC<DataTableProps> = ({
     strikes: 0,
     statusF: "",
   });
+
+  const [valuesToUpdateReport, setValuesToUpdateReport] = useState<any>({
+    id: 0,
+    type: "",
+    reason: "",
+    isHandled: false,
+    reportDate: new Date(),
+    from: 0,
+    to: 0,
+    projectId: 0,
+  });
+
   const navigate = useNavigate();
 
-  const handleDelete = (
+  const handleDeleteReport = (id: number) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
+    if (confirmDelete) {
+      deleteData(`http://localhost:3001/api/reports/${id}`);
+    }
+  };
+  const handleDeleteUser = (id: number) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
+    if (confirmDelete) {
+      deleteData(`http://localhost:3001/api/user/${id}`);
+    }
+  };
+
+  const handleDeleteProject = (
     projectId: number,
     clientId: Number,
     projectTitle: string
@@ -67,7 +80,7 @@ const DataTable: React.FC<DataTableProps> = ({
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this item?"
     );
-    if (confirmDelete && relatedTo == "project") {
+    if (confirmDelete) {
       deleteData(`http://localhost:3001/api/project/${projectId}`);
       send(
         {
@@ -76,8 +89,6 @@ const DataTable: React.FC<DataTableProps> = ({
         },
         "http://localhost:3001/api/notification/"
       );
-    } else if (confirmDelete && relatedTo == "user") {
-      deleteData(`http://localhost:3001/api/user/${id}`);
     }
   };
 
@@ -125,6 +136,30 @@ const DataTable: React.FC<DataTableProps> = ({
 
         setIsOpen(true);
       };
+
+      const handleClickReport = (
+        id: number,
+        type: string,
+        reason: string,
+        isHandled: boolean,
+        reportDate: Date,
+        from: number,
+        to: number,
+        projectId: number
+      ) => {
+        setValuesToUpdateReport({
+          id,
+          type,
+          reason,
+          isHandled,
+          reportDate,
+          from,
+          to,
+          projectId,
+        });
+
+        setIsOpen(true);
+      };
       return (
         <div className="flex items-center">
           <button
@@ -146,6 +181,17 @@ const DataTable: React.FC<DataTableProps> = ({
                     params.row.freelancerId,
                     params.row.clientId
                   )
+                : relatedTo == "report"
+                ? handleClickReport(
+                    params.row.id,
+                    params.row.type,
+                    params.row.reason,
+                    params.row.isHandled,
+                    params.row.reportDate,
+                    params.row.from,
+                    params.row.to,
+                    params.row.projectId
+                  )
                 : handleClickUser(
                     params.row.id,
                     params.row.nickName,
@@ -158,9 +204,19 @@ const DataTable: React.FC<DataTableProps> = ({
             <HiOutlinePencilSquare />
           </button>
           <button
-            onClick={() =>
-              handleDelete(params.row.id, params.row.clientId, params.row.name)
-            }
+            onClick={() => {
+              relatedTo == "project"
+                ? handleDeleteProject(
+                    params.row.id,
+                    params.row.clientId,
+                    params.row.name
+                  )
+                : relatedTo == "report"
+                ? handleDeleteReport(params.row.id)
+                : relatedTo == "user"
+                ? handleDeleteUser(params.row.id)
+                : "";
+            }}
             className="btn btn-square btn-ghost"
           >
             <HiOutlineTrash />
@@ -202,7 +258,13 @@ const DataTable: React.FC<DataTableProps> = ({
         <ProjectData
           isOpen={isOpen}
           setIsOpen={setIsOpen}
-          values={relatedTo == "project" ? valuesToUpdate : valuesToUpdateUser}
+          values={
+            relatedTo == "project"
+              ? valuesToUpdate
+              : relatedTo == "report"
+              ? valuesToUpdateReport
+              : valuesToUpdateUser
+          }
           relatedTo={relatedTo}
         />
       )}

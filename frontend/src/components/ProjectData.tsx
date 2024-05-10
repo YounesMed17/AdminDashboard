@@ -10,6 +10,7 @@ import React, {
 import { HiOutlineXMark } from "react-icons/hi2";
 import { modifyData } from "../utilFunctions/modifyData";
 import { send } from "../utilFunctions/sendData";
+import { Button } from "@mui/material";
 
 interface AddDataProps {
   isOpen: boolean;
@@ -35,7 +36,9 @@ const ProjectData: FC<AddDataProps> = ({
   const [statusU, setStatusU] = useState(values.statusU);
   const [nickName, setNickName] = useState(values.nickName);
   const [strike, setStrike] = useState(values.strikes);
-
+  const [isHandled, setIsHandled] = useState(values.isHandled);
+  const [sendStrike, setSendStrike] = useState(false);
+  console.log(values);
   //console.log(values);
   useEffect(() => {
     if (
@@ -64,12 +67,33 @@ const ProjectData: FC<AddDataProps> = ({
   useEffect(() => {
     setShowModal(isOpen);
   }, [isOpen]);
-  console.log(values);
+  console.log("gggggggggggg", values);
   async function updateProject() {
+    if (relatedTo == "report") {
+      await modifyData(
+        {
+          type: values.type,
+          reason: values.reason,
+          isHandled: true,
+          reportDate: values.reportDate,
+          from: values.from,
+          to: values.to,
+          projectId: values.projectId,
+        },
+        `http://localhost:3001/api/reports/${values.id}`
+      );
+      if (sendStrike) {
+        await modifyData(
+          {},
+          `http://localhost:3001/api/user/strike/${values.to}`
+        );
+      }
+    }
+
     if (relatedTo == "project") {
       await modifyData(
         { name: title, totalPrice, status, isPublished, deadLine: deadline },
-        `http://localhost:3001/api/project/${values.id}`
+        `http://localhost:3001/api/report/${values.id}`
       );
 
       if (values.totalPrice != totalPrice) {
@@ -100,7 +124,6 @@ const ProjectData: FC<AddDataProps> = ({
           },
           "http://localhost:3001/api/notification/"
         );
-        console.log(id1);
       }
     } else if (relatedTo == "user") {
       await modifyData(
@@ -152,11 +175,14 @@ const ProjectData: FC<AddDataProps> = ({
       );
     }
   }
+  function sendStrikes() {
+    setSendStrike(!sendStrike);
+  }
 
   return (
     <div className="w-screen h-screen fixed top-0 left-0 flex justify-center items-center bg-black/75 z-[99]">
       <div
-        className={`w-[80%] xl:w-[50%] rounded-lg p-7 bg-base-100 relative transition duration-300 flex flex-col items-stretch gap-5 ${
+        className={`w-[80%] xl:w-[50%] rounded-lg p-7   bg-base-100 relative transition duration-300 flex flex-col items-stretch gap-5 ${
           showModal ? "translate-y-0" : "translate-y-full"
         }
             ${showModal ? "opacity-100" : "opacity-0"}`}
@@ -171,12 +197,46 @@ const ProjectData: FC<AddDataProps> = ({
           >
             <HiOutlineXMark className="text-xl font-bold" />
           </button>
-          <span className="text-2xl font-bold">Update project data</span>
+          <span className="text-2xl font-bold">
+            {relatedTo == "user"
+              ? "Update user data"
+              : relatedTo == "project"
+              ? "Update project data"
+              : relatedTo == "report"
+              ? "Update report data"
+              : ""}
+          </span>
         </div>
         <form
           onSubmit={handleSubmit}
           className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4"
         >
+          <label
+            className={
+              relatedTo == "report" ? "form-control w-full " : "hidden"
+            }
+          >
+            <div className="label">
+              <span className="label-text">Did you handle the report</span>
+            </div>
+            <select
+              className="select select-bordered"
+              value={isHandled}
+              onChange={(element) => setIsHandled(element.target.value)}
+            >
+              <option value={1}>Yes</option>
+              <option value={0}>No</option>
+            </select>
+          </label>
+          <label
+            className={
+              relatedTo == "report" ? "form-control w-[80%] mt-[11%]" : "hidden"
+            }
+          >
+            <Button onClick={sendStrikes} variant="outlined">
+              {!sendStrike ? "Add strike to the user" : "Cancel strike"}
+            </Button>
+          </label>
           <label
             className={
               relatedTo == "project" ? "form-control w-full" : "hidden"
@@ -320,7 +380,13 @@ const ProjectData: FC<AddDataProps> = ({
             } btn-block col-span-full font-semibold`}
             onClick={updateProject}
           >
-            Update Project
+            {relatedTo == "user"
+              ? "Update user"
+              : relatedTo == "project"
+              ? "Update project"
+              : relatedTo == "report"
+              ? "Update report"
+              : ""}
           </button>
         </form>
       </div>

@@ -61,9 +61,9 @@ export const menu = [
       },
       {
         isLink: true,
-        url: "/posts",
+        url: "/reports",
         icon: HiOutlineDocumentChartBar,
-        label: "posts",
+        label: "Reports",
       },
     ],
   },

@@ -6,14 +6,11 @@ import {
   ScrollRestoration,
 } from "react-router-dom";
 import Home from "./pages/Home";
-import Users from "./pages/Freelancers";
-import Products from "./pages/Products";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Menu from "./components/menu/Menu";
 import Error from "./pages/Error";
 import Profile from "./pages/Profile";
-import Orders from "./pages/Orders";
 import Posts from "./pages/Posts";
 import Notes from "./pages/Notes";
 import Calendar from "./pages/Calendar";
@@ -22,13 +19,13 @@ import Logs from "./pages/Logs";
 import ToasterProvider from "./components/ToasterProvider";
 import EditProfile from "./pages/EditProfile";
 import User from "./pages/User";
-import Product from "./pages/Product";
 import Login from "./pages/Login";
 import Freelancers from "./pages/Freelancers";
 import Clients from "./pages/Clients";
 import VIPclients from "./pages/VIPclients";
 import Projects from "./pages/Projects";
 import Project from "./pages/Project";
+import Reports from "./pages/reports";
 
 function App() {
   const Layout = () => {
@@ -95,6 +92,10 @@ function App() {
         {
           path: "/projects/:id",
           element: <Project />,
+        },
+        {
+          path: "/reports",
+          element: <Reports />,
         },
 
         {
