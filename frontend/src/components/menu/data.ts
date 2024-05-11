@@ -36,34 +36,40 @@ export const menu = [
     listItems: [
       {
         isLink: true,
-        url: "/freelancers",
+        url: "/freelancers/:id",
         icon: HiOutlineUsers,
         label: "Freelancers",
       },
 
       {
         isLink: true,
-        url: "/clients",
+        url: "/clients/:id",
         icon: HiOutlineUsers,
         label: "Clients",
       },
       {
         isLink: true,
-        url: "/VIPclients",
+        url: "/VIPclients/:id",
         icon: HiOutlineUsers,
         label: "VIP Clients",
       },
       {
         isLink: true,
-        url: "/projects",
+        url: "/projects/:id",
         icon: HiOutlineCube,
         label: "Projects",
       },
       {
         isLink: true,
-        url: "/reports",
+        url: "/reports/:id",
         icon: HiOutlineDocumentChartBar,
         label: "Reports",
+      },
+      {
+        isLink: true,
+        url: "/admins/:id",
+        icon: HiOutlineDocumentChartBar,
+        label: "Admins",
       },
     ],
   },

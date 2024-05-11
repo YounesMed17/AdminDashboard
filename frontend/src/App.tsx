@@ -26,6 +26,7 @@ import VIPclients from "./pages/VIPclients";
 import Projects from "./pages/Projects";
 import Project from "./pages/Project";
 import Reports from "./pages/reports";
+import Admins from "./pages/Admins";
 
 function App() {
   const Layout = () => {
@@ -70,19 +71,19 @@ function App() {
           element: <EditProfile />,
         },
         {
-          path: "/freelancers",
+          path: "/freelancers/:id",
           element: <Freelancers />,
         },
         {
-          path: "/clients",
+          path: "/clients/:id",
           element: <Clients />,
         },
         {
-          path: "/VIPClients",
+          path: "/VIPClients/:id",
           element: <VIPclients />,
         },
         {
-          path: "/projects",
+          path: "/projects/:id",
           element: <Projects />,
         },
         {
@@ -94,13 +95,13 @@ function App() {
           element: <Project />,
         },
         {
-          path: "/reports",
+          path: "/reports/:id",
           element: <Reports />,
         },
 
         {
-          path: "/posts",
-          element: <Posts />,
+          path: "/admins/:id",
+          element: <Admins />,
         },
         {
           path: "/notes",

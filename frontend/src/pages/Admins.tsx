@@ -3,12 +3,11 @@ import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../components/DataTable";
 import { get } from "../utilFunctions/getData";
 //import toast from "react-hot-toast";
-
-import ProjectData from "../components/ProjectData";
+import AddData from "../components/AddData";
 import { useParams } from "react-router-dom";
 
-const Projects = () => {
-  const [projects, setProjects] = React.useState<any[]>([]);
+const VIPclients = () => {
+  const [users, setUsers] = useState<any[]>([]);
   const [admin, setAdmin] = useState({ role: "" });
 
   const { id } = useParams();
@@ -23,38 +22,32 @@ const Projects = () => {
     fetchData();
   }, []);
   const fetchProjects = async () => {
-    const res = await get("http://localhost:3001/api/project/allProjects");
+    const res = await get("http://localhost:3001/api/user/admin");
     const values = await res;
 
-    const formattedProjects = values.map((item) => {
+    const formattedUsers = values.map((item) => {
       // Parse createdAt string into Date object
       const createdAtDate = new Date(item.creationDate);
-      const deadline = new Date(item.deadLine);
+
       // Format date to desired format (day-month-year)
-      const formattedDate1 = `${createdAtDate.getDate()}-${
+      const formattedDate = `${createdAtDate.getDate()}-${
         createdAtDate.getMonth() + 1
       }-${createdAtDate.getFullYear()}`;
-      const formattedDate2 = `${deadline.getDate()}-${
-        deadline.getMonth() + 1
-      }-${deadline.getFullYear()}`;
 
       return {
         id: item.id,
-        name: item.name,
-        description: item.description,
-        deadline: formattedDate2,
-        status: item.status,
-        createdAt: formattedDate1,
-        totalPrice: item.totalPrice,
-        isPublished: item.isPublished,
-        freelancerId: item.freelancerId,
-        clientId: item.clientId,
+        firstName: item.first_name,
+        lastName: item.last_name,
+        email: item.email,
+        phone: 20668574,
+        createdAt: formattedDate,
+        nickName: item.nickname,
+        role: item.role,
       };
     });
 
-    setProjects(formattedProjects);
+    setUsers(formattedUsers);
   };
-
   useEffect(() => {
     // Fetch projects initially
     fetchProjects();
@@ -71,9 +64,9 @@ const Projects = () => {
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 20 },
     {
-      field: "name",
-      headerName: "Title",
-      minWidth: 150,
+      field: "firstName",
+      headerName: "Name",
+      minWidth: 160,
       flex: 1,
       renderCell: (params) => {
         return (
@@ -86,31 +79,35 @@ const Projects = () => {
                 />
               </div>
             </div>
-            <span className="mb-0 pb-0 leading-none">{params.row.name}</span>
+            <span className="mb-0 pb-0 leading-none">
+              {params.row.firstName} {params.row.lastName}
+            </span>
           </div>
         );
       },
     },
     {
-      field: "status",
+      field: "nickName",
       type: "string",
-      headerName: "Status",
+      headerName: "NickName",
       minWidth: 80,
       flex: 1,
     },
     {
-      field: "deadline",
+      field: "email",
       type: "string",
-      headerName: "Deadline",
-      minWidth: 90,
+      headerName: "Email",
+      minWidth: 200,
       flex: 1,
+      cellClassName: "MuiDataGridCell-center", // Apply center alignment
     },
     {
-      field: "totalPrice",
+      field: "phone",
       type: "string",
-      headerName: "TotalPrice",
+      headerName: "Phone",
       minWidth: 120,
       flex: 1,
+      cellClassName: "MuiDataGridCell-center", // Apply center alignment
     },
     {
       field: "createdAt",
@@ -118,40 +115,46 @@ const Projects = () => {
       minWidth: 100,
       type: "string",
       flex: 1,
+      cellClassName: "MuiDataGridCell-center", // Apply center alignment
     },
     {
-      field: "isPublished",
-      headerName: "Is Published",
+      field: "role",
+      headerName: "Role",
       minWidth: 100,
-      type: "boolean",
+      type: "string",
       flex: 1,
+      cellClassName: "MuiDataGridCell-center", // Apply center alignment
     },
   ];
-
-  return admin.role == "ProjectsAdmin" || admin.role == "SuperAdmin" ? (
+  console.log("aaaaaa", users);
+  return admin.role == "SuperAdmin" ? (
     <div className="w-full p-0 m-0">
       <div className="w-full flex flex-col items-stretch gap-3">
         <div className="w-full flex justify-between mb-5">
           <div className="flex gap-1 justify-start flex-col items-start">
             <h2 className="font-bold text-2xl xl:text-4xl mt-0 pt-0 text-base-content dark:text-neutral-200">
-              Projects
+              Users
             </h2>
-            {projects && projects.length > 0 && (
+            {users && users.length > 0 && (
               <span className="text-neutral dark:text-neutral-content font-medium text-base">
-                {projects.length} Projects Found
+                {users.length} Users Found
               </span>
             )}
           </div>
           <button onClick={() => setIsOpen(true)} className="btn btn-primary">
-            Add New Project +
+            Add New Admin +
           </button>
         </div>
         <DataTable
-          slug="projects"
-          relatedTo="project"
+          slug="user"
+          relatedTo="user"
           columns={columns}
-          rows={projects}
+          rows={users}
         />
+
+        {isOpen && (
+          <AddData slug={"admin"} isOpen={isOpen} setIsOpen={setIsOpen} />
+        )}
       </div>
     </div>
   ) : (
@@ -164,4 +167,4 @@ const Projects = () => {
   );
 };
 
-export default Projects;
+export default VIPclients;

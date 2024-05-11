@@ -27,6 +27,8 @@ const AddData: React.FC<AddDataProps> = ({
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [formUserIsEmpty, setFormUserIsEmpty] = React.useState(false);
+  const [role, setRole] = useState("");
+  const [password, setPassword] = useState("");
 
   const loadImage = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -52,9 +54,9 @@ const AddData: React.FC<AddDataProps> = ({
         last_name: lastName,
         email,
         nickname,
-        role: "VIPclient",
+        role: role,
         status: "active",
-        password: "vip123456789",
+        password: password,
       };
       // Send POST request to backend
       send(formData, "http://localhost:3001/api/user/inscriptionUser");
@@ -129,6 +131,28 @@ const AddData: React.FC<AddDataProps> = ({
             id="phone"
             onChange={(element) => setPhone(element.target.value)}
           />
+          <input
+            type="text"
+            placeholder="Password"
+            className="input input-bordered w-full"
+            name="password"
+            id="password"
+            onChange={(element) => setPassword(element.target.value)}
+          />
+          <label className={slug == "admin" ? "form-control w-full" : "hidden"}>
+            <div className="label">
+              <span className="label-text">Admin Role</span>
+            </div>
+            <select
+              className="select select-bordered"
+              value={role}
+              onChange={(element) => setRole(element.target.value)}
+            >
+              <option value="AccountsAdmin">AccountsAdmin</option>
+              <option value="ChatAdmin">ChatAdmin</option>
+              <option value="ProjectsAdmin">ProjectsAdmin</option>
+            </select>
+          </label>
 
           {/*<label className="form-control w-full">
               <div className="label">
