@@ -1,11 +1,46 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { get } from "../utilFunctions/getData";
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableRow,
+  Box,
+  ImageList,
+  ImageListItem,
+} from "@mui/material";
+
+interface SkillData {
+  skills: string;
+  domain: string;
+}
 
 const User = () => {
   const { id } = useParams();
 
-  const [user, setUser] = React.useState<any[]>([]);
+  const [user, setUser] = useState<any>({});
+  const [skills, setSkills] = useState<SkillData[]>([]);
+  const [pictures, setPictures] = useState<any[]>([]);
+  useEffect(() => {
+    // Fetch pictures when the component mounts
+    const fetchPictures = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/api/file/all");
+        if (response.ok) {
+          const data = await response.json();
+          setPictures(data); // Update state with fetched pictures
+        } else {
+          console.error("Failed to fetch pictures");
+        }
+      } catch (error) {
+        console.error("Error fetching pictures:", error);
+      }
+    };
+
+    fetchPictures();
+  }, []); // Empty dependency array to run effect only once
 
   useEffect(() => {
     async function fetchData() {
@@ -19,34 +54,50 @@ const User = () => {
         createdAtDate.getMonth() + 1
       }-${createdAtDate.getFullYear()}`;
 
-      const User = {
+      const userData = {
         id: item.id,
         firstName: item.first_name,
         lastName: item.last_name,
         email: item.email,
-        phone: 20668574,
+        phone: item.phoneNumber || 206685574,
         createdAt: formattedDate,
         status: item.status,
-        verified: false,
+        verified: false, // Assuming this is a boolean value
         strikes: item.strikesNbr,
       };
 
-      setUser(User);
+      setUser(userData);
     }
 
     fetchData();
-  }, []);
+  }, [id]);
+
+  useEffect(() => {
+    async function fetchSkills() {
+      const res = await get(
+        `http://localhost:3001/api/userSkills/alluserskillsdomains/${id}`
+      );
+      const values = await res;
+
+      const userSkills = values.map((item) => ({
+        skills: item.skillName,
+        domain: item.domaine,
+      }));
+
+      setSkills(userSkills);
+    }
+
+    fetchSkills();
+  }, [id]);
 
   return (
-    // screen
-    <div id="singleUser" className="w-full p-0 m-0">
-      {/* container */}
-      <div className="w-full grid xl:grid-cols-2 gap-10 mt-5 xl:mt-0">
-        {/* column 1 */}
+    <div
+      id="singleUser"
+      className="w-[65%] flex justify-center gap-[50px] items-center flex-col"
+    >
+      <div className="">
         <div className="w-full flex flex-col items-start gap-10">
-          {/* profile block */}
           <div className="w-full flex flex-col items-start gap-5">
-            {/* photo block */}
             <div className="w-full flex items-center gap-3">
               <div className="flex items-center gap-3 xl:gap-8 xl:mb-4">
                 <div className="avatar">
@@ -58,15 +109,12 @@ const User = () => {
                   <h3 className="font-semibold text-xl xl:text-3xl dark:text-white">
                     {user.firstName} {user.lastName}
                   </h3>
-
                   <span className="font-normal text-base">Member</span>
                 </div>
               </div>
             </div>
-            {/* detail block */}
             <div className="w-full flex gap-8">
               <div className="w-full grid grid-cols-3 xl:flex gap-5 xl:gap-8">
-                {/* column 1 */}
                 <div className="col-span-1 flex flex-col items-start gap-3 xl:gap-5">
                   <span>First Name</span>
                   <span>Last Name</span>
@@ -74,7 +122,6 @@ const User = () => {
                   <span>Phone</span>
                   <span>Status</span>
                 </div>
-                {/* column 2 */}
                 <div className="col-span-2 flex flex-col items-start gap-3 xl:gap-5">
                   <span className="font-semibold">{user.firstName}</span>
                   <span className="font-semibold">{user.lastName}</span>
@@ -86,6 +133,47 @@ const User = () => {
                 </div>
               </div>
             </div>
+            <div className="w-full mt-[50px]">
+              <Table>
+                <TableHead>
+                  <TableRow className="bg-[#dcdcdc]">
+                    <TableCell>Skills</TableCell>
+                    <TableCell>Domain</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {skills.map((skill, index) => (
+                    <TableRow
+                      key={index}
+                      className={index % 2 === 0 ? "bg-[#fff]" : "bg-[#f7f7f7]"}
+                    >
+                      <TableCell>{skill.skills}</TableCell>
+                      <TableCell>{skill.domain}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+          <div className="flex justify-center items-center w-full">
+            <Box
+              sx={{
+                width: "100%",
+              }}
+            >
+              <ImageList variant="masonry" cols={3} gap={8}>
+                {pictures.map((item, index) => (
+                  <ImageListItem key={index}>
+                    <img
+                      srcSet={`http://localhost:3001/uploads/${item.link}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                      src={`http://localhost:3001/uploads/${item.link}?w=248&fit=crop&auto=format`}
+                      alt="portfolio img"
+                      loading="lazy"
+                    />
+                  </ImageListItem>
+                ))}
+              </ImageList>
+            </Box>
           </div>
         </div>
       </div>
