@@ -1,95 +1,107 @@
-import React from 'react';
-import { GridColDef } from '@mui/x-data-grid';
-import DataTable from '../components/DataTable';
-import { useQuery } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
-// import AddData from '../components/AddData';
-import { fetchOrders } from '../api/ApiCollection';
+import { useEffect, useState } from "react";
+import { GridColDef } from "@mui/x-data-grid";
+import DataTable from "../components/DataTable";
+import { get } from "../utilFunctions/getData";
+import { useParams } from "react-router-dom";
 
 const Orders = () => {
-  // const [isOpen, setIsOpen] = React.useState(false);
-  const { isLoading, isError, isSuccess, data } = useQuery({
-    queryKey: ['allorders'],
-    queryFn: fetchOrders,
-  });
+  const [users, setUsers] = useState<any[]>([]);
+  const [admin, setAdmin] = useState({ role: "" });
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    async function fetchData() {
+      const res = await get(`http://localhost:3001/api/user/${id}`);
+
+      setAdmin({ role: res.role });
+    }
+
+    fetchData();
+  }, []);
+
+  const fetchOrders = async () => {
+    const res = await get("http://localhost:3001/api/orders/all");
+
+    const formattedUsers = res.map((item) => {
+      // Parse createdAt string into Date object
+
+      return {
+        id: item.id,
+        name: item.name,
+        email: item.email,
+        adress: item.adress,
+        city: item.city,
+        phone: item.phoneNumber,
+        status: item.status,
+        userId: item.userId,
+        productId: item.productId,
+      };
+    });
+
+    setUsers(formattedUsers);
+  };
+
+  useEffect(() => {
+    // Fetch projects initially
+    fetchOrders();
+
+    // Set interval to fetch projects every 3 seconds
+    const intervalId = setInterval(fetchOrders, 3000);
+
+    // Clean up interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 90 },
+    { field: "id", headerName: "ID", width: 20 },
+
     {
-      field: 'title',
-      headerName: 'Product',
-      minWidth: 300,
-      flex: 1,
-      renderCell: (params) => {
-        return (
-          <div className="flex gap-3 items-center">
-            <div className="w-6 xl:w-10 overflow-hidden flex justify-center items-center">
-              <img
-                src={params.row.product || '/corrugated-box.jpg'}
-                alt="orders-picture"
-                className="object-cover"
-              />
-            </div>
-            <span className="mb-0 pb-0 leading-none">
-              {params.row.title}
-            </span>
-          </div>
-        );
-      },
-    },
-    {
-      field: 'address',
-      type: 'string',
-      headerName: 'Address',
-      minWidth: 320,
+      field: "productId",
+      type: "string",
+      headerName: "Product id",
+      minWidth: 30,
       flex: 1,
     },
     {
-      field: 'recipient',
-      headerName: 'Recipient',
+      field: "name",
+      type: "string",
+      headerName: "Name",
+      minWidth: 150,
+      flex: 1,
+      cellClassName: "MuiDataGridCell-center", // Apply center alignment
+    },
+    {
+      field: "adress",
+      type: "string",
+      headerName: "Adress",
       minWidth: 250,
       flex: 1,
-      renderCell: (params) => {
-        return (
-          <div className="flex gap-3 items-center">
-            <div className="avatar">
-              <div className="w-6 xl:w-9 rounded-full">
-                <img
-                  src={
-                    params.row.profile || '/Portrait_Placeholder.png'
-                  }
-                  alt="user-picture"
-                />
-              </div>
-            </div>
-            <span className="mb-0 pb-0 leading-none">
-              {params.row.recipient}
-            </span>
-          </div>
-        );
-      },
+      cellClassName: "MuiDataGridCell-center", // Apply center alignment
     },
     {
-      field: 'date',
-      headerName: 'Date',
-      minWidth: 100,
-      type: 'string',
+      field: "city",
+      type: "string",
+      headerName: "City",
+      minWidth: 80,
       flex: 1,
+      cellClassName: "MuiDataGridCell-center", // Apply center alignment
     },
     {
-      field: 'total',
-      headerName: 'Total',
+      field: "phone",
+      headerName: "Phone",
       minWidth: 100,
-      type: 'string',
+      type: "string",
       flex: 1,
+      cellClassName: "MuiDataGridCell-center", // Apply center alignment
     },
     {
-      field: 'status',
-      headerName: 'Status',
-      minWidth: 120,
+      field: "status",
+      headerName: "Status",
+      minWidth: 60,
       flex: 1,
       renderCell: (params) => {
-        if (params.row.status == 'Pending') {
+        if (params.row.status == "pending") {
           return (
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-warning"></div>
@@ -98,7 +110,7 @@ const Orders = () => {
               </div>
             </div>
           );
-        } else if (params.row.status == 'Dispatch') {
+        } else if (params.row.status == "Dispatch") {
           return (
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-info"></div>
@@ -107,7 +119,7 @@ const Orders = () => {
               </div>
             </div>
           );
-        } else if (params.row.status == 'Cancelled') {
+        } else if (params.row.status == "cancelled") {
           return (
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-error"></div>
@@ -116,7 +128,7 @@ const Orders = () => {
               </div>
             </div>
           );
-        } else if (params.row.status == 'Completed') {
+        } else if (params.row.status == "completed") {
           return (
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-success"></div>
@@ -137,84 +149,46 @@ const Orders = () => {
         }
       },
     },
+    {
+      field: "userId",
+      headerName: "UserId",
+      width: 30,
+      type: "number",
+      flex: 1,
+    },
   ];
-
-  React.useEffect(() => {
-    if (isLoading) {
-      toast.loading('Loading...', { id: 'promiseOrders' });
-    }
-    if (isError) {
-      toast.error('Error while getting the data!', {
-        id: 'promiseOrders',
-      });
-    }
-    if (isSuccess) {
-      toast.success('Got the data successfully!', {
-        id: 'promiseOrders',
-      });
-    }
-  }, [isError, isLoading, isSuccess]);
-
-  return (
+  return admin.role == "AccountsAdmin" ||
+    admin.role == "SuperAdmin" ||
+    admin.role == "" ? (
     <div className="w-full p-0 m-0">
       <div className="w-full flex flex-col items-stretch gap-3">
         <div className="w-full flex justify-between mb-5">
           <div className="flex gap-1 justify-start flex-col items-start">
             <h2 className="font-bold text-2xl xl:text-4xl mt-0 pt-0 text-base-content dark:text-neutral-200">
-              Orders
+              Users
             </h2>
-            {data && data.length > 0 && (
+            {users && users.length > 0 && (
               <span className="text-neutral dark:text-neutral-content font-medium text-base">
-                {data.length} Orders Found
+                {users.length} Users Found
               </span>
             )}
           </div>
-          {/* <button
-            onClick={() => setIsOpen(true)}
-            className={`btn ${
-              isLoading ? 'btn-disabled' : 'btn-primary'
-            }`}
-          >
-            Add New Order +
-          </button> */}
         </div>
-        {isLoading ? (
-          <DataTable
-            slug="orders"
-            columns={columns}
-            rows={[]}
-            includeActionColumn={false}
-          />
-        ) : isSuccess ? (
-          <DataTable
-            slug="orders"
-            columns={columns}
-            rows={data}
-            includeActionColumn={false}
-          />
-        ) : (
-          <>
-            <DataTable
-              slug="orders"
-              columns={columns}
-              rows={[]}
-              includeActionColumn={false}
-            />
-            <div className="w-full flex justify-center">
-              Error while getting the data!
-            </div>
-          </>
-        )}
-
-        {/* {isOpen && (
-          <AddData
-            slug={'user'}
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-          />
-        )} */}
+        <DataTable
+          slug="oreders"
+          relatedTo="orders"
+          columns={columns}
+          rows={users}
+        />
       </div>
     </div>
+  ) : (
+    <h1
+      className="flex justify-center items-center mt-[150px] "
+      style={{ color: "red", fontWeight: "bold", fontSize: "55px" }}
+    >
+      You Are Not Authorized Here !
+    </h1>
   );
 };
 

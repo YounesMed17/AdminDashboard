@@ -11,7 +11,6 @@ import Footer from "./components/Footer";
 import Menu from "./components/menu/Menu";
 import Error from "./pages/Error";
 import Profile from "./pages/Profile";
-import Posts from "./pages/Posts";
 import Notes from "./pages/Notes";
 import Calendar from "./pages/Calendar";
 import Charts from "./pages/Charts";
@@ -27,6 +26,8 @@ import Projects from "./pages/Projects";
 import Project from "./pages/Project";
 import Reports from "./pages/reports";
 import Admins from "./pages/Admins";
+import Orders from "./pages/Orders";
+import Products from "./pages/Products";
 
 function App() {
   const Layout = () => {
@@ -102,6 +103,14 @@ function App() {
         {
           path: "/admins/:id",
           element: <Admins />,
+        },
+        {
+          path: "/orders/:id",
+          element: <Orders />,
+        },
+        {
+          path: "/products/:id",
+          element: <Products />,
         },
         {
           path: "/notes",

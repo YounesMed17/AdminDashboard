@@ -71,6 +71,18 @@ export const menu = [
         icon: HiOutlineDocumentChartBar,
         label: "Admins",
       },
+      {
+        isLink: true,
+        url: "/orders/:id",
+        icon: HiOutlineCube,
+        label: "Orders",
+      },
+      {
+        isLink: true,
+        url: "/products/:id",
+        icon: HiOutlineCube,
+        label: "Products",
+      },
     ],
   },
   {

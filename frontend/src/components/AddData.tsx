@@ -1,5 +1,4 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import React, { FormEvent, useEffect, useState } from "react";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { send } from "../utilFunctions/sendData";
 
@@ -17,8 +16,6 @@ const AddData: React.FC<AddDataProps> = ({
 }) => {
   // global
   const [showModal, setShowModal] = React.useState(false);
-  const [file, setFile] = React.useState<File | null>(null);
-  const [preview, setPreview] = React.useState<string | null>(null);
 
   // add user
   const [firstName, setFirstName] = useState("");
@@ -26,11 +23,18 @@ const AddData: React.FC<AddDataProps> = ({
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [formUserIsEmpty, setFormUserIsEmpty] = React.useState(false);
+  const [formUserIsEmpty, setFormUserIsEmpty] = useState(false);
   const [role, setRole] = useState("");
   const [password, setPassword] = useState("");
+  const [productLabel, setProductLabel] = useState("");
+  const [productDescription, setProductDescription] = useState("");
+  const [price, setPrice] = useState(0);
+  const [stock, setStock] = useState(0);
 
-  const loadImage = (e: ChangeEvent<HTMLInputElement>) => {
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+
+  const loadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const imageUpload = e.target.files[0];
       setFile(imageUpload);
@@ -39,16 +43,61 @@ const AddData: React.FC<AddDataProps> = ({
   };
   useEffect(() => {
     setFormUserIsEmpty(
-      firstName === "" ||
+      (firstName === "" ||
         lastName === "" ||
         nickname === "" ||
         email === "" ||
-        phone === ""
+        phone === "") &&
+        (productLabel === "" ||
+          productDescription === "" ||
+          price == 0 ||
+          stock == 0 ||
+          file === null)
     );
-  }, [firstName, lastName, nickname, email, phone]);
+  }, [
+    firstName,
+    lastName,
+    nickname,
+    email,
+    phone,
+    productLabel,
+    productDescription,
+    price,
+    file,
+    stock,
+  ]);
+  const handleSubmit2 = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("productLabel", productLabel);
+    formData.append("price", price.toString());
+    formData.append("stock", stock.toString());
+    formData.append("productDescription", productDescription);
+    formData.append("file", file as Blob);
+    console.log(formData);
+
+    try {
+      const response = await fetch("http://localhost:3001/add-product", {
+        method: "POST",
+        body: formData,
+      });
+      console.log(formData);
+      if (response.ok) {
+        alert("Product added successfully!");
+      } else {
+        const data = await response.json();
+        alert(data.error || "An error occurred while adding the product.");
+      }
+    } catch (error) {
+      console.error("Error adding product:", error);
+      alert("An error occurred while adding the product.");
+    }
+  };
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!formUserIsEmpty) {
+    if (!formUserIsEmpty && slug == "user") {
       const formData = {
         first_name: firstName,
         last_name: lastName,
@@ -61,9 +110,20 @@ const AddData: React.FC<AddDataProps> = ({
       // Send POST request to backend
       send(formData, "http://localhost:3001/api/user/inscriptionUser");
     }
+
+    if (!formUserIsEmpty && slug == "products") {
+      const formData = {
+        productLabel,
+        productDescription,
+        price,
+        stock,
+        file,
+      };
+      send(formData, "http://localhost:3001/api/products/api/addProducts");
+    }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setShowModal(isOpen);
   }, [isOpen]);
 
@@ -88,21 +148,69 @@ const AddData: React.FC<AddDataProps> = ({
           <span className="text-2xl font-bold">Add new {slug}</span>
         </div>
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit2}
           className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4"
         >
           <input
             type="text"
             placeholder="First Name"
-            className="input input-bordered w-full"
+            className={
+              slug == "products" ? "hidden" : "input input-bordered w-full"
+            }
             name="firstName"
             id="firstName"
             onChange={(element) => setFirstName(element.target.value)}
           />
+
+          <input
+            type="text"
+            placeholder="Product Name"
+            className={
+              slug != "products" ? "hidden" : "input input-bordered w-full"
+            }
+            name="Name"
+            id="Name"
+            onChange={(element) => setProductLabel(element.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Product Description"
+            className={
+              slug != "products" ? "hidden" : "input input-bordered w-full"
+            }
+            name="Name"
+            id="Name"
+            onChange={(element) => setProductDescription(element.target.value)}
+          />
+
+          <input
+            type="number"
+            placeholder="price"
+            className={
+              slug != "products" ? "hidden" : "input input-bordered w-full"
+            }
+            name="price"
+            id="price"
+            onChange={(element) => setPrice(element.target.value)}
+          />
+
+          <input
+            type="number"
+            placeholder="stock"
+            className={
+              slug != "products" ? "hidden" : "input input-bordered w-full"
+            }
+            name="stock"
+            id="stock"
+            onChange={(element) => setStock(element.target.value)}
+          />
+
           <input
             type="text"
             placeholder="Last Name"
-            className="input input-bordered w-full"
+            className={
+              slug == "products" ? "hidden" : "input input-bordered w-full"
+            }
             name="lastName"
             id="lastName"
             onChange={(element) => setLastName(element.target.value)}
@@ -110,7 +218,9 @@ const AddData: React.FC<AddDataProps> = ({
           <input
             type="email"
             placeholder="Email"
-            className="input input-bordered w-full"
+            className={
+              slug == "products" ? "hidden" : "input input-bordered w-full"
+            }
             name="email"
             id="email"
             onChange={(element) => setEmail(element.target.value)}
@@ -118,7 +228,9 @@ const AddData: React.FC<AddDataProps> = ({
           <input
             type="text"
             placeholder="Nickname"
-            className="input input-bordered w-full"
+            className={
+              slug == "products" ? "hidden" : "input input-bordered w-full"
+            }
             name="nickname"
             id="nickname"
             onChange={(element) => setNickname(element.target.value)}
@@ -126,7 +238,9 @@ const AddData: React.FC<AddDataProps> = ({
           <input
             type="text"
             placeholder="Phone"
-            className="input input-bordered w-full"
+            className={
+              slug == "products" ? "hidden" : "input input-bordered w-full"
+            }
             name="phone"
             id="phone"
             onChange={(element) => setPhone(element.target.value)}
@@ -134,7 +248,9 @@ const AddData: React.FC<AddDataProps> = ({
           <input
             type="text"
             placeholder="Password"
-            className="input input-bordered w-full"
+            className={
+              slug == "products" ? "hidden" : "input input-bordered w-full"
+            }
             name="password"
             id="password"
             onChange={(element) => setPassword(element.target.value)}
@@ -154,28 +270,28 @@ const AddData: React.FC<AddDataProps> = ({
             </select>
           </label>
 
-          {/*<label className="form-control w-full">
-              <div className="label">
-                <span className="label-text">
-                  Pick a profile photo
-                </span>
-              </div>
-              <input
-                type="file"
-                className="file-input file-input-bordered w-full"
-                onChange={loadImage}
-              />
-            </label>
-            {preview && preview !== '' && (
-              <div className="w-full flex flex-col items-start gap-3">
-                <span>Profile Preview</span>
-                <div className="avatar">
-                  <div className="w-24 rounded-full">
-                    <img src={preview} alt="profile-upload" />
-                  </div>
+          <label
+            className={slug == "products" ? "form-control w-full" : "hidden"}
+          >
+            <div className="label">
+              <span className="label-text">Pick a product photo</span>
+            </div>
+            <input
+              type="file"
+              className="file-input file-input-bordered w-full"
+              onChange={loadImage}
+            />
+          </label>
+          {preview && preview !== "" && (
+            <div className="w-full flex flex-col items-start gap-3">
+              <span>Product Preview</span>
+              <div className="avatar">
+                <div className="w-24 rounded-full">
+                  <img src={preview} alt="profile-upload" />
                 </div>
               </div>
-            )} */}
+            </div>
+          )}
           <button
             className={`mt-5 btn ${
               formUserIsEmpty ? "btn-disabled" : "btn-primary"
