@@ -157,7 +157,7 @@ const Orders = () => {
       flex: 1,
     },
   ];
-  return admin.role == "AccountsAdmin" ||
+  return admin.role == "ProductsAdmin" ||
     admin.role == "SuperAdmin" ||
     admin.role == "" ? (
     <div className="w-full p-0 m-0">

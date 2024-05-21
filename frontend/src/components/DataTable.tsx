@@ -35,6 +35,14 @@ const DataTable: React.FC<DataTableProps> = ({
     freelancerId: 0,
     clientId: 0,
   });
+  const [valuesToUpdateProduct, setValuesToUpdateProduct] = useState<any>({
+    id: 0,
+    productLabel: "",
+    productDescription: "",
+    stock: 0,
+    price: 0,
+  });
+
   const [valuesToUpdateUser, setValuesToUpdateUser] = useState<any>({
     id: 0,
     nickName: "",
@@ -71,7 +79,14 @@ const DataTable: React.FC<DataTableProps> = ({
       deleteData(`http://localhost:3001/api/user/${id}`);
     }
   };
-
+  const handleDeleteProduct = (id: number) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
+    if (confirmDelete) {
+      deleteData(`http://localhost:3001/api/products/${id}`);
+    }
+  };
   const handleDeleteProject = (
     projectId: number,
     clientId: Number,
@@ -98,6 +113,24 @@ const DataTable: React.FC<DataTableProps> = ({
     minWidth: 200,
     flex: 1,
     renderCell: (params) => {
+      const handleClickProduct = (
+        id: number,
+        productLabel: string,
+        productDescription: string,
+        stock: number,
+        price: number
+      ) => {
+        setValuesToUpdateProduct({
+          id,
+          productLabel,
+          productDescription,
+          stock,
+          price,
+        });
+
+        setIsOpen(true);
+      };
+
       const handleClickUser = (
         id: number,
         nickName: string,
@@ -166,7 +199,14 @@ const DataTable: React.FC<DataTableProps> = ({
             onClick={() => navigate(`/${slug}/${params.row.id}`)}
             className="btn btn-square btn-ghost"
           >
-            <HiOutlineEye />
+            {relatedTo == "products" ||
+            relatedTo == "orders" ||
+            relatedTo == "admins" ||
+            relatedTo == "reports" ? (
+              ""
+            ) : (
+              <HiOutlineEye />
+            )}
           </button>
           <button
             onClick={() => {
@@ -192,6 +232,14 @@ const DataTable: React.FC<DataTableProps> = ({
                     params.row.to,
                     params.row.projectId
                   )
+                : relatedTo == "products"
+                ? handleClickProduct(
+                    params.row.id,
+                    params.row.productLabel,
+                    params.row.productDescription,
+                    params.row.stock,
+                    params.row.price
+                  )
                 : handleClickUser(
                     params.row.id,
                     params.row.nickName,
@@ -215,6 +263,8 @@ const DataTable: React.FC<DataTableProps> = ({
                 ? handleDeleteReport(params.row.id)
                 : relatedTo == "user"
                 ? handleDeleteUser(params.row.id)
+                : relatedTo == "products"
+                ? handleDeleteProduct(params.row.id)
                 : "";
             }}
             className="btn btn-square btn-ghost"
@@ -263,6 +313,8 @@ const DataTable: React.FC<DataTableProps> = ({
               ? valuesToUpdate
               : relatedTo == "report"
               ? valuesToUpdateReport
+              : relatedTo == "products"
+              ? valuesToUpdateProduct
               : valuesToUpdateUser
           }
           relatedTo={relatedTo}

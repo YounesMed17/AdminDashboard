@@ -62,7 +62,6 @@ const Freelancers = () => {
     // Clean up interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
-  const [isOpen, setIsOpen] = React.useState(false);
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 20 },
@@ -150,9 +149,7 @@ const Freelancers = () => {
               </span>
             )}
           </div>
-          <button onClick={() => setIsOpen(true)} className="btn btn-primary">
-            Add New User +
-          </button>
+         
         </div>
         <DataTable
           slug="users"

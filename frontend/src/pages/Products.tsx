@@ -101,9 +101,7 @@ const Products = () => {
       flex: 1,
     },
   ];
-  return admin.role == "AccountsAdmin" ||
-    admin.role == "SuperAdmin" ||
-    admin.role == "" ? (
+  return admin.role == "ProductsAdmin" || admin.role == "SuperAdmin" ? (
     <div className="w-full p-0 m-0">
       <div className="w-full flex flex-col items-stretch gap-3">
         <div className="w-full flex justify-between mb-5">

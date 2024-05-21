@@ -38,6 +38,13 @@ const ProjectData: FC<AddDataProps> = ({
   const [strike, setStrike] = useState(values.strikes);
   const [isHandled, setIsHandled] = useState(values.isHandled);
   const [sendStrike, setSendStrike] = useState(false);
+  const [productLabel, setProductLabel] = useState(values.productLabel);
+  const [productDescription, setProductDescription] = useState(
+    values.productDescription
+  );
+  const [price, setPrice] = useState(values.price);
+  const [stock, setStock] = useState(values.stock);
+
   console.log(values);
   //console.log(values);
   useEffect(() => {
@@ -67,7 +74,6 @@ const ProjectData: FC<AddDataProps> = ({
   useEffect(() => {
     setShowModal(isOpen);
   }, [isOpen]);
-  console.log("gggggggggggg", values);
   async function updateProject() {
     if (relatedTo == "report") {
       await modifyData(
@@ -125,6 +131,16 @@ const ProjectData: FC<AddDataProps> = ({
           "http://localhost:3001/api/notification/"
         );
       }
+    } else if (relatedTo == "products") {
+      await modifyData(
+        {
+          productLabel,
+          productDescription,
+          stock,
+          price,
+        },
+        `http://localhost:3001/api/products/${values.id}`
+      );
     } else if (relatedTo == "user") {
       await modifyData(
         {
@@ -374,6 +390,77 @@ const ProjectData: FC<AddDataProps> = ({
               <option value="suspended">Suspended</option>
             </select>
           </label>
+
+          <label
+            className={
+              relatedTo == "products" ? "form-control w-full" : "hidden"
+            }
+          >
+            <div className="label">
+              <span className="label-text">Change Product Label</span>
+            </div>
+            <input
+              type="text"
+              placeholder="Product Label"
+              className="input input-bordered w-full"
+              value={productLabel}
+              onChange={(element) => setProductLabel(element.target.value)}
+            />
+          </label>
+
+          <label
+            className={
+              relatedTo == "products" ? "form-control w-full" : "hidden"
+            }
+          >
+            <div className="label">
+              <span className="label-text">Change Product Description</span>
+            </div>
+            <input
+              type="text"
+              placeholder="Product Description"
+              className="input input-bordered w-full"
+              value={productDescription}
+              onChange={(element) =>
+                setProductDescription(element.target.value)
+              }
+            />
+          </label>
+
+          <label
+            className={
+              relatedTo == "products" ? "form-control w-full" : "hidden"
+            }
+          >
+            <div className="label">
+              <span className="label-text">Change stock</span>
+            </div>
+            <input
+              type="number"
+              placeholder="Stock"
+              className="input input-bordered w-full"
+              value={stock}
+              onChange={(element) => setStock(element.target.value)}
+            />
+          </label>
+
+          <label
+            className={
+              relatedTo == "products" ? "form-control w-full" : "hidden"
+            }
+          >
+            <div className="label">
+              <span className="label-text">Changeprice</span>
+            </div>
+            <input
+              type="number"
+              placeholder="Price"
+              className="input input-bordered w-full"
+              value={price}
+              onChange={(element) => setPrice(element.target.value)}
+            />
+          </label>
+
           <button
             className={`mt-5 btn ${
               formProductIsEmpty ? "btn-disabled" : "btn-primary"
@@ -386,6 +473,8 @@ const ProjectData: FC<AddDataProps> = ({
               ? "Update project"
               : relatedTo == "report"
               ? "Update report"
+              : relatedTo == "products"
+              ? "Update product"
               : ""}
           </button>
         </form>
