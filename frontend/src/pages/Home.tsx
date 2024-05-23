@@ -152,7 +152,7 @@ const Home = () => {
         </div>
 
         <div
-          className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
+          className="bg-red-200	 box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
           style={{ height: "150px", fontSize: "1.5rem" }}
         >
           <div className="flex justify-start items-start">
@@ -165,7 +165,7 @@ const Home = () => {
         </div>
 
         <div
-          className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
+          className=" bg-red-200 box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
           style={{ height: "150px", fontSize: "1.5rem" }}
         >
           <div className="flex justify-start items-start">
@@ -178,7 +178,7 @@ const Home = () => {
         </div>
 
         <div
-          className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
+          className=" bg-purple-300  box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
           style={{ height: "150px", fontSize: "1.5rem" }}
         >
           <div className="flex justify-start items-start">
@@ -191,7 +191,7 @@ const Home = () => {
         </div>
 
         <div
-          className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
+          className=" bg-gray-200 box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
           style={{ height: "150px", fontSize: "1.5rem" }}
         >
           <div className="flex justify-start items-start">
@@ -204,7 +204,7 @@ const Home = () => {
         </div>
 
         <div
-          className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
+          className=" bg-blue-100 box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
           style={{ height: "150px", fontSize: "1.5rem" }}
         >
           <div className="flex justify-start items-start">
@@ -217,7 +217,7 @@ const Home = () => {
         </div>
 
         <div
-          className="box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
+          className=" bg-blue-100 box col-span-full sm:col-span-1 xl:col-span-1 3xl:row-span-2 flex flex-col justify-center items-center"
           style={{ height: "150px", fontSize: "1.5rem" }}
         >
           <div className="flex justify-start items-start">

@@ -83,44 +83,16 @@ export const menu = [
         icon: HiOutlineCube,
         label: "Products",
       },
-    ],
-  },
-  {
-    catalog: "general",
-    listItems: [
       {
         isLink: true,
-        url: "/notes",
-        icon: HiOutlinePencilSquare,
-        label: "notes",
-      },
-      {
-        isLink: true,
-        url: "/calendar",
-        icon: HiOutlineCalendarDays,
-        label: "calendar",
+        url: "/chatRooms/:id",
+        icon: HiOutlineCube,
+        label: "Chat Rooms",
       },
     ],
   },
+
   {
-    catalog: "analytics",
-    listItems: [
-      {
-        isLink: true,
-        url: "/charts",
-        icon: HiOutlinePresentationChartBar,
-        label: "charts",
-      },
-      {
-        isLink: true,
-        url: "/logs",
-        icon: HiOutlineDocumentText,
-        label: "logs",
-      },
-    ],
-  },
-  {
-    catalog: "miscellaneous",
     listItems: [
       // {
       //   isLink: true,

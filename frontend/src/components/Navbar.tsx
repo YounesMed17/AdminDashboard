@@ -1,17 +1,17 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { HiBars3CenterLeft } from 'react-icons/hi2';
-import { DiReact } from 'react-icons/di';
-import { HiSearch, HiOutlineBell } from 'react-icons/hi';
-import { RxEnterFullScreen, RxExitFullScreen } from 'react-icons/rx';
-import ChangeThemes from './ChangesThemes';
-import toast from 'react-hot-toast';
-import { menu } from './menu/data';
-import MenuItem from './menu/MenuItem';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { HiBars3CenterLeft } from "react-icons/hi2";
+import { DiReact } from "react-icons/di";
+import { HiSearch, HiOutlineBell } from "react-icons/hi";
+import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
+import ChangeThemes from "./ChangesThemes";
+import toast from "react-hot-toast";
+import { menu } from "./menu/data";
+import MenuItem from "./menu/MenuItem";
 
 const Navbar = () => {
   const [isFullScreen, setIsFullScreen] = React.useState(true);
-  const element = document.getElementById('root');
+  const element = document.getElementById("root");
 
   const [isDrawerOpen, setDrawerOpen] = React.useState(false);
   const toggleDrawer = () => setDrawerOpen(!isDrawerOpen);
@@ -26,7 +26,7 @@ const Navbar = () => {
     if (isFullScreen) {
       document.exitFullscreen();
     } else {
-      element?.requestFullscreen({ navigationUI: 'auto' });
+      element?.requestFullscreen({ navigationUI: "auto" });
     }
   }, [element, isFullScreen]);
 
@@ -60,12 +60,11 @@ const Navbar = () => {
             ></label>
             <div className="menu p-4 w-auto min-h-full bg-base-200 text-base-content">
               <Link
-                to={'/'}
+                to={"/"}
                 className="flex items-center gap-1 xl:gap-2 mt-1 mb-5"
               >
-                <DiReact className="text-3xl sm:text-4xl xl:text-4xl 2xl:text-6xl text-primary animate-spin-slow" />
                 <span className="text-[16px] leading-[1.2] sm:text-lg xl:text-xl 2xl:text-2xl font-semibold text-base-content dark:text-neutral-200">
-                  React Dashboard
+                  Admin Dashboard
                 </span>
               </Link>
               {menu.map((item, index) => (
@@ -81,10 +80,12 @@ const Navbar = () => {
         </div>
 
         {/* navbar logo */}
-        <Link to={'/'} className="flex items-center gap-1 xl:gap-2">
-          <DiReact className="text-3xl sm:text-4xl xl:text-4xl 2xl:text-6xl text-primary animate-spin-slow" />
-          <span className="text-[16px] leading-[1.2] sm:text-lg xl:text-xl 2xl:text-2xl font-semibold text-base-content dark:text-neutral-200">
-            React Dashboard
+        <Link to={"/"} className="flex items-center gap-1 xl:gap-2">
+          <span
+            style={{ color: "#891919db" }}
+            className="text-[16px] bold leading-[1.2] sm:text-lg xl:text-xl 2xl:text-2xl font-semibold text-base-content dark:text-neutral-200"
+          >
+            Admin Dashboard
           </span>
         </Link>
       </div>
@@ -94,8 +95,8 @@ const Navbar = () => {
         {/* search */}
         <button
           onClick={() =>
-            toast('Gaboleh cari!', {
-              icon: '😠',
+            toast("Gaboleh cari!", {
+              icon: "😠",
             })
           }
           className="hidden sm:inline-flex btn btn-circle btn-ghost"
@@ -118,8 +119,8 @@ const Navbar = () => {
         {/* notification */}
         <button
           onClick={() =>
-            toast('Gaada notif!', {
-              icon: '😠',
+            toast("Gaada notif!", {
+              icon: "😠",
             })
           }
           className="px-0 xl:px-auto btn btn-circle btn-ghost"
@@ -150,12 +151,12 @@ const Navbar = () => {
             tabIndex={0}
             className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-40"
           >
-            <Link to={'/profile'}>
+            <Link to={"/profile"}>
               <li>
                 <a className="justify-between">My Profile</a>
               </li>
             </Link>
-            <li onClick={() => navigate('/login')}>
+            <li onClick={() => navigate("/login")}>
               <a>Log Out</a>
             </li>
           </ul>

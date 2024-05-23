@@ -113,20 +113,8 @@ function App() {
           element: <Products />,
         },
         {
-          path: "/notes",
-          element: <Notes />,
-        },
-        {
-          path: "/calendar",
-          element: <Calendar />,
-        },
-        {
-          path: "/charts",
-          element: <Charts />,
-        },
-        {
-          path: "/logs",
-          element: <Logs />,
+          path: "/chatRooms/:id",
+          element: <Products />,
         },
       ],
       errorElement: <Error />,
