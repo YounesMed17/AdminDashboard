@@ -1,24 +1,106 @@
-// import React from 'react';
-import ChangeThemes from '../components/ChangesThemes';
-import { DiReact } from 'react-icons/di';
-import { useNavigate } from 'react-router-dom';
+import { useCallback, useState } from "react";
+import ChangeThemes from "../components/ChangesThemes";
+import { useNavigate } from "react-router-dom";
+import {
+  validateEmail,
+  validateNotEmpty,
+} from "../utilFunctions/ValidateFunction";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [number, setNumber] = useState(0);
+
+  console.log(errorMessage, number);
+  const handleLogin = useCallback(async () => {
+    setErrorMessage("");
+    setNumber(0);
+    if (!validateNotEmpty(email) && !validateNotEmpty(password)) {
+      setNumber(1);
+      setErrorMessage("Email and password are required");
+      return;
+    } else if (!validateEmail(email)) {
+      setNumber(2);
+      setErrorMessage("Veuillez saisir une adresse e-mail valide.");
+      return;
+    } else if (!validateNotEmpty(password)) {
+      setNumber(3);
+      setErrorMessage("Veuillez saisir un mot de passe.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3001/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        const { token, id } = responseData;
+        localStorage.setItem("token", token);
+        localStorage.setItem("id", id);
+        getUserInfo();
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la connexion :", error);
+    }
+
+    setEmail("");
+    setPassword("");
+  }, [email, password, navigate]);
+  const getUserInfo = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const id = localStorage.getItem("id");
+
+      if (token) {
+        const response = await fetch(`http://localhost:3001/api/user/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const userInfo = await response.json();
+          if (userInfo.role === "AccountsAdmin") navigate("/freelancers");
+          else if (userInfo.role === "ProjectsAdmin") navigate("/projects");
+          else if (userInfo.role === "ChatsAdmin") navigate("/reports");
+          else if (userInfo.role === "SuperAdmin") navigate("/");
+
+          console.log(userInfo);
+        } else {
+          console.error("Failed to get user information:", response.statusText);
+        }
+      } else {
+        console.error("Token not found.");
+      }
+    } catch (error) {
+      console.error("Failed to get user information:", error);
+    }
+  }, [navigate]);
+
   return (
     // screen
     <div className="w-full p-0 m-0">
       {/* container */}
-      <div className="w-full min-h-screen flex justify-center items-center bg-base-200 relative">
+      <div className="w-full min-h-screen flex justify-center items-center bg-base-200 relative ">
         {/* theme */}
         <div className="absolute top-5 right-5 z-[99]">
           <ChangeThemes />
         </div>
         <div className="w-full h-screen xl:h-auto xl:w-[30%] 2xl:w-[25%] 3xl:w-[20%] bg-base-100 rounded-lg shadow-md flex flex-col items-center p-5 pb-7 gap-8 pt-20 xl:pt-7">
           <div className="flex items-center gap-1 xl:gap-2">
-            <DiReact className="text-4xl sm:text-4xl xl:text-6xl 2xl:text-6xl text-primary animate-spin-slow -ml-3" />
             <span className="text-[18px] leading-[1.2] sm:text-lg xl:text-3xl 2xl:text-3xl font-semibold text-base-content dark:text-neutral-200">
-              React Dashboard
+              Pitchini Dashboard
             </span>
           </div>
           <span className="xl:text-xl font-semibold">
@@ -39,6 +121,8 @@ const Login = () => {
                 type="text"
                 className="grow input outline-none focus:outline-none border-none border-[0px] h-auto pl-1 pr-0"
                 placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </label>
             <label className="input input-bordered flex items-center gap-2">
@@ -58,21 +142,11 @@ const Login = () => {
                 type="password"
                 className="grow input outline-none focus:outline-none border-none border-[0px] h-auto pl-1 pr-0"
                 placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </label>
             <div className="flex items-center justify-between">
-              <div className="form-control">
-                <label className="label cursor-pointer gap-2">
-                  <input
-                    type="checkbox"
-                    defaultChecked
-                    className="checkbox w-4 h-4 rounded-md checkbox-primary"
-                  />
-                  <span className="label-text text-xs">
-                    Remember me
-                  </span>
-                </label>
-              </div>
               <a
                 href="#"
                 className="link link-primary font-semibold text-xs no-underline"
@@ -81,39 +155,10 @@ const Login = () => {
               </a>
             </div>
             <div
-              onClick={() => navigate('/')}
+              onClick={() => handleLogin()}
               className="btn btn-block btn-primary"
             >
               Log In
-            </div>
-            <div className="divider text-sm">OR</div>
-            <div className="w-full flex justify-center items-center gap-4">
-              <button className="btn btn-circle dark:btn-neutral">
-                <img
-                  className="w-6"
-                  src="/icons8-microsoft.svg"
-                  alt="microsoft"
-                />
-              </button>
-              <button className="btn btn-circle dark:btn-neutral">
-                <img
-                  className="w-6"
-                  src="/icons8-google.svg"
-                  alt="google"
-                />
-              </button>
-              <button className="btn btn-circle dark:btn-neutral">
-                <img
-                  className="dark:hidden w-6"
-                  src="/icons8-apple-black.svg"
-                  alt="apple"
-                />
-                <img
-                  className="hidden dark:block w-6"
-                  src="/icons8-apple-white.svg"
-                  alt="apple"
-                />
-              </button>
             </div>
           </div>
         </div>

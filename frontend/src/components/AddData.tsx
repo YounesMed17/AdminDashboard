@@ -111,15 +111,15 @@ const AddData: React.FC<AddDataProps> = ({
       send(formData, "http://localhost:3001/api/user/inscriptionUser");
     }
 
-    if (!formUserIsEmpty && slug == "products") {
+    if (!formUserIsEmpty && slug == "admin") {
       const formData = {
-        productLabel,
-        productDescription,
-        price,
-        stock,
-        file,
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        nickname,
+        role: role,
       };
-      send(formData, "http://localhost:3001/api/products/api/addProducts");
+      send(formData, "http://localhost:3001/api/user/inscriptionUser");
     }
   };
 
@@ -148,7 +148,7 @@ const AddData: React.FC<AddDataProps> = ({
           <span className="text-2xl font-bold">Add new {slug}</span>
         </div>
         <form
-          onSubmit={handleSubmit2}
+          onSubmit={slug == "products" ? handleSubmit2 : handleSubmit}
           className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4"
         >
           <input

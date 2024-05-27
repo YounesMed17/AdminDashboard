@@ -1,33 +1,17 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../components/DataTable";
 import { get } from "../utilFunctions/getData";
 //import toast from "react-hot-toast";
-import AddData from "../components/AddData";
-import ProjectData from "../components/ProjectData";
-import { useParams } from "react-router-dom";
 
 const Freelancers = () => {
-  const [users, setUsers] = React.useState<any[]>([]);
-  const [admin, setAdmin] = useState({ role: "" });
-
-  const { id } = useParams();
-
-  useEffect(() => {
-    async function fetchData() {
-      const res = await get(`http://localhost:3001/api/user/${id}`);
-
-      setAdmin({ role: res.role });
-    }
-
-    fetchData();
-  }, []);
+  const [users, setUsers] = useState<any[]>([]);
 
   const fetchProjects = async () => {
     const res = await get("http://localhost:3001/api/user/Freelancer");
     const values = await res;
 
-    const formattedUsers = values.map((item) => {
+    const formattedUsers = values.map((item: any) => {
       // Parse createdAt string into Date object
       const createdAtDate = new Date(item.creationDate);
 
@@ -135,7 +119,7 @@ const Freelancers = () => {
     },
   ];
 
-  return admin.role == "AccountsAdmin" || admin.role == "SuperAdmin" ? (
+  return (
     <div className="w-full p-0 m-0">
       <div className="w-full flex flex-col items-stretch gap-3">
         <div className="w-full flex justify-between mb-5">
@@ -149,7 +133,6 @@ const Freelancers = () => {
               </span>
             )}
           </div>
-         
         </div>
         <DataTable
           slug="users"
@@ -159,13 +142,6 @@ const Freelancers = () => {
         />
       </div>
     </div>
-  ) : (
-    <h1
-      className="flex justify-center items-center mt-[150px] "
-      style={{ color: "red", fontWeight: "bold", fontSize: "55px" }}
-    >
-      You Are Not Authorized Here !
-    </h1>
   );
 };
 

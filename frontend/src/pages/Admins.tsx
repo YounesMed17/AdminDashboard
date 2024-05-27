@@ -4,28 +4,15 @@ import DataTable from "../components/DataTable";
 import { get } from "../utilFunctions/getData";
 //import toast from "react-hot-toast";
 import AddData from "../components/AddData";
-import { useParams } from "react-router-dom";
 
 const VIPclients = () => {
   const [users, setUsers] = useState<any[]>([]);
-  const [admin, setAdmin] = useState({ role: "" });
 
-  const { id } = useParams();
-
-  useEffect(() => {
-    async function fetchData() {
-      const res = await get(`http://localhost:3001/api/user/${id}`);
-
-      setAdmin({ role: res.role });
-    }
-
-    fetchData();
-  }, []);
   const fetchProjects = async () => {
     const res = await get("http://localhost:3001/api/user/admin");
     const values = await res;
 
-    const formattedUsers = values.map((item) => {
+    const formattedUsers = values.map((item: any) => {
       // Parse createdAt string into Date object
       const createdAtDate = new Date(item.creationDate);
 
@@ -127,7 +114,7 @@ const VIPclients = () => {
     },
   ];
   console.log("aaaaaa", users);
-  return admin.role == "SuperAdmin" ? (
+  return (
     <div className="w-full p-0 m-0">
       <div className="w-full flex flex-col items-stretch gap-3">
         <div className="w-full flex justify-between mb-5">
@@ -146,8 +133,8 @@ const VIPclients = () => {
           </button>
         </div>
         <DataTable
-          slug="user"
-          relatedTo="user"
+          slug="admin"
+          relatedTo="admin"
           columns={columns}
           rows={users}
         />
@@ -157,13 +144,6 @@ const VIPclients = () => {
         )}
       </div>
     </div>
-  ) : (
-    <h1
-      className="flex justify-center items-center mt-[150px] "
-      style={{ color: "red", fontWeight: "bold", fontSize: "55px" }}
-    >
-      You Are Not Authorized Here !
-    </h1>
   );
 };
 

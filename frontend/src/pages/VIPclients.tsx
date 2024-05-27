@@ -1,31 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../components/DataTable";
 import { get } from "../utilFunctions/getData";
 //import toast from "react-hot-toast";
 import AddData from "../components/AddData";
-import { useParams } from "react-router-dom";
 
 const VIPclients = () => {
   const [users, setUsers] = React.useState<any[]>([]);
-  const [admin, setAdmin] = useState({ role: "" });
 
-  const { id } = useParams();
-
-  useEffect(() => {
-    async function fetchData() {
-      const res = await get(`http://localhost:3001/api/user/${id}`);
-
-      setAdmin({ role: res.role });
-    }
-
-    fetchData();
-  }, []);
   const fetchProjects = async () => {
     const res = await get("http://localhost:3001/api/user/allVIPClients");
     const values = await res;
 
-    const formattedUsers = values.map((item) => {
+    const formattedUsers = values.map((item: any) => {
       // Parse createdAt string into Date object
       const createdAtDate = new Date(item.creationDate);
 
@@ -135,7 +122,7 @@ const VIPclients = () => {
     },
   ];
 
-  return admin.role == "AccountsAdmin" || admin.role == "SuperAdmin" ? (
+  return (
     <div className="w-full p-0 m-0">
       <div className="w-full flex flex-col items-stretch gap-3">
         <div className="w-full flex justify-between mb-5">
@@ -153,25 +140,13 @@ const VIPclients = () => {
             Add New User +
           </button>
         </div>
-        <DataTable
-          slug="user"
-          relatedTo="user"
-          columns={columns}
-          rows={users}
-        />
+        <DataTable slug="user" relatedTo="VIP" columns={columns} rows={users} />
 
         {isOpen && (
           <AddData slug={"user"} isOpen={isOpen} setIsOpen={setIsOpen} />
         )}
       </div>
     </div>
-  ) : (
-    <h1
-      className="flex justify-center items-center mt-[150px] "
-      style={{ color: "red", fontWeight: "bold", fontSize: "55px" }}
-    >
-      You Are Not Authorized Here !
-    </h1>
   );
 };
 

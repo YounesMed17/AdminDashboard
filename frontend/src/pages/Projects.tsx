@@ -1,32 +1,17 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../components/DataTable";
 import { get } from "../utilFunctions/getData";
 //import toast from "react-hot-toast";
 
-import ProjectData from "../components/ProjectData";
-import { useParams } from "react-router-dom";
-
 const Projects = () => {
-  const [projects, setProjects] = React.useState<any[]>([]);
-  const [admin, setAdmin] = useState({ role: "" });
+  const [projects, setProjects] = useState<any[]>([]);
 
-  const { id } = useParams();
-
-  useEffect(() => {
-    async function fetchData() {
-      const res = await get(`http://localhost:3001/api/user/${id}`);
-
-      setAdmin({ role: res.role });
-    }
-
-    fetchData();
-  }, []);
   const fetchProjects = async () => {
     const res = await get("http://localhost:3001/api/project/allProjects");
     const values = await res;
 
-    const formattedProjects = values.map((item) => {
+    const formattedProjects = values.map((item: any) => {
       // Parse createdAt string into Date object
       const createdAtDate = new Date(item.creationDate);
       const deadline = new Date(item.deadLine);
@@ -65,8 +50,6 @@ const Projects = () => {
     // Clean up interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
-
-  const [isOpen, setIsOpen] = React.useState(false);
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 20 },
@@ -128,7 +111,7 @@ const Projects = () => {
     },
   ];
 
-  return admin.role == "ProjectsAdmin" || admin.role == "SuperAdmin" ? (
+  return (
     <div className="w-full p-0 m-0">
       <div className="w-full flex flex-col items-stretch gap-3">
         <div className="w-full flex justify-between mb-5">
@@ -142,9 +125,6 @@ const Projects = () => {
               </span>
             )}
           </div>
-          <button onClick={() => setIsOpen(true)} className="btn btn-primary">
-            Add New Project +
-          </button>
         </div>
         <DataTable
           slug="projects"
@@ -154,13 +134,6 @@ const Projects = () => {
         />
       </div>
     </div>
-  ) : (
-    <h1
-      className="flex justify-center items-center mt-[150px] "
-      style={{ color: "red", fontWeight: "bold", fontSize: "55px" }}
-    >
-      You Are Not Authorized Here !
-    </h1>
   );
 };
 

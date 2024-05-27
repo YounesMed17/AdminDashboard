@@ -5,11 +5,6 @@ import {
   HiOutlineUsers,
   HiOutlineCube,
   HiOutlineDocumentChartBar,
-  HiOutlinePencilSquare,
-  HiOutlineCalendarDays,
-  HiOutlinePresentationChartBar,
-  HiOutlineDocumentText,
-  HiOutlineArrowLeftOnRectangle,
 } from "react-icons/hi2";
 // import { IoSettingsOutline } from 'react-icons/io5';
 
@@ -36,50 +31,50 @@ export const menu = [
     listItems: [
       {
         isLink: true,
-        url: "/freelancers/:id",
+        url: "/freelancers",
         icon: HiOutlineUsers,
         label: "Freelancers",
       },
 
       {
         isLink: true,
-        url: "/clients/:id",
+        url: "/clients",
         icon: HiOutlineUsers,
         label: "Clients",
       },
       {
         isLink: true,
-        url: "/VIPclients/:id",
+        url: "/VIPclients",
         icon: HiOutlineUsers,
         label: "VIP Clients",
       },
       {
         isLink: true,
-        url: "/projects/:id",
+        url: "/projects",
         icon: HiOutlineCube,
         label: "Projects",
       },
       {
         isLink: true,
-        url: "/reports/:id",
+        url: "/reports",
         icon: HiOutlineDocumentChartBar,
         label: "Reports",
       },
       {
         isLink: true,
-        url: "/admins/:id",
+        url: "/admins",
         icon: HiOutlineDocumentChartBar,
         label: "Admins",
       },
       {
         isLink: true,
-        url: "/orders/:id",
+        url: "/orders",
         icon: HiOutlineCube,
         label: "Orders",
       },
       {
         isLink: true,
-        url: "/products/:id",
+        url: "/products",
         icon: HiOutlineCube,
         label: "Products",
       },
@@ -88,23 +83,6 @@ export const menu = [
         url: "/chatRooms/:id",
         icon: HiOutlineCube,
         label: "Chat Rooms",
-      },
-    ],
-  },
-
-  {
-    listItems: [
-      // {
-      //   isLink: true,
-      //   url: '/settings',
-      //   icon: IoSettingsOutline,
-      //   label: 'settings',
-      // },
-      {
-        isLink: true,
-        url: "/login",
-        icon: HiOutlineArrowLeftOnRectangle,
-        label: "log out",
       },
     ],
   },

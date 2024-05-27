@@ -1,31 +1,17 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../components/DataTable";
 import { get } from "../utilFunctions/getData";
 //import toast from "react-hot-toast";
-import AddData from "../components/AddData";
-import { useParams } from "react-router-dom";
 
 const Reports = () => {
-  const [reports, setReports] = React.useState<any[]>([]);
-  const [admin, setAdmin] = useState({ role: "" });
+  const [reports, setReports] = useState<any[]>([]);
 
-  const { id } = useParams();
-
-  useEffect(() => {
-    async function fetchData() {
-      const res = await get(`http://localhost:3001/api/user/${id}`);
-
-      setAdmin({ role: res.role });
-    }
-
-    fetchData();
-  }, []);
   const fetchProjects = async () => {
     const res = await get("http://localhost:3001/api/reports/all");
     const values = await res;
 
-    const Reports = values.map((item) => {
+    const Reports = values.map((item: any) => {
       // Parse createdAt string into Date object
       const reportDate = new Date(item.reportDate);
 
@@ -59,7 +45,6 @@ const Reports = () => {
     // Clean up interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
-  const [isOpen, setIsOpen] = React.useState(false);
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 20 },
@@ -110,7 +95,7 @@ const Reports = () => {
     },
   ];
 
-  return admin.role == "ChatAdmin" || admin.role == "SuperAdmin" ? (
+  return (
     <div className="w-full p-0 m-0">
       <div className="w-full flex flex-col items-stretch gap-3">
         <div className="w-full flex justify-between mb-5">
@@ -124,9 +109,6 @@ const Reports = () => {
               </span>
             )}
           </div>
-          <button onClick={() => setIsOpen(true)} className="btn btn-primary">
-            Add New User +
-          </button>
         </div>
         <DataTable
           slug="report"
@@ -134,18 +116,8 @@ const Reports = () => {
           columns={columns}
           rows={reports}
         />
-        {isOpen && (
-          <AddData slug={"report"} isOpen={isOpen} setIsOpen={setIsOpen} />
-        )}
       </div>
     </div>
-  ) : (
-    <h1
-      className="flex justify-center items-center mt-[150px] "
-      style={{ color: "red", fontWeight: "bold", fontSize: "55px" }}
-    >
-      You Are Not Authorized Here !
-    </h1>
   );
 };
 

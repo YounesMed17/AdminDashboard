@@ -1,11 +1,18 @@
-import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { get } from "../utilFunctions/getData";
 
-const Project = () => {
-  const { id } = useParams();
+interface ProjectData {
+  id: string;
+  name: string;
+  description: string;
+  deadline: string;
+  status: string;
+  createdAt: string;
+  totalPrice: number;
+}
 
-  const [project, setProject] = React.useState<any[]>([]);
+const Project: React.FC = () => {
+  const [project, setProject] = useState<ProjectData | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -37,7 +44,7 @@ const Project = () => {
 
     fetchData();
   }, []);
-  console.log(project.length + "aaaaaaaaaaaa");
+  console.log(project?.length + "aaaaaaaaaaaa");
   return (
     // screen
     <div id="singleProject" className="w-full p-0 m-0">
@@ -57,7 +64,7 @@ const Project = () => {
                 </div>
                 <div className="flex flex-col items-start gap-1">
                   <h3 className="font-semibold text-xl xl:text-3xl dark:text-white">
-                    {project.name}
+                    {project?.name}
                   </h3>
 
                   <span className="font-normal text-base">Member</span>
@@ -76,10 +83,10 @@ const Project = () => {
                 </div>
                 {/* column 2 */}
                 <div className="col-span-2 flex flex-col items-start gap-3 xl:gap-5">
-                  <span className="font-semibold">{project.name}</span>
-                  <span className="font-semibold">{project.description}</span>
-                  <span className="font-semibold">{project.status}</span>
-                  <span className="font-semibold">{project.deadline}</span>
+                  <span className="font-semibold">{project?.name}</span>
+                  <span className="font-semibold">{project?.description}</span>
+                  <span className="font-semibold">{project?.status}</span>
+                  <span className="font-semibold">{project?.deadline}</span>
                 </div>
               </div>
             </div>

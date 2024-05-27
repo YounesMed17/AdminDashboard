@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { get } from "../utilFunctions/getData";
 import {
@@ -27,7 +27,9 @@ const User = () => {
     // Fetch pictures when the component mounts
     const fetchPictures = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/file/all");
+        const response = await fetch(
+          `http://localhost:3001/api/file/user/${id}`
+        );
         if (response.ok) {
           const data = await response.json();
           setPictures(data); // Update state with fetched pictures
@@ -79,7 +81,7 @@ const User = () => {
       );
       const values = await res;
 
-      const userSkills = values.map((item) => ({
+      const userSkills = values.map((item: any) => ({
         skills: item.skillName,
         domain: item.domaine,
       }));

@@ -4,6 +4,7 @@ import {
   RouterProvider,
   Outlet,
   ScrollRestoration,
+  useNavigate,
 } from "react-router-dom";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
@@ -11,10 +12,7 @@ import Footer from "./components/Footer";
 import Menu from "./components/menu/Menu";
 import Error from "./pages/Error";
 import Profile from "./pages/Profile";
-import Notes from "./pages/Notes";
-import Calendar from "./pages/Calendar";
-import Charts from "./pages/Charts";
-import Logs from "./pages/Logs";
+
 import ToasterProvider from "./components/ToasterProvider";
 import EditProfile from "./pages/EditProfile";
 import User from "./pages/User";
@@ -23,14 +21,23 @@ import Freelancers from "./pages/Freelancers";
 import Clients from "./pages/Clients";
 import VIPclients from "./pages/VIPclients";
 import Projects from "./pages/Projects";
-import Project from "./pages/Project";
 import Reports from "./pages/reports";
 import Admins from "./pages/Admins";
 import Orders from "./pages/Orders";
 import Products from "./pages/Products";
+import Discussion from "./pages/ChatRoomss";
+import { useState } from "react";
+import { CircularProgress } from "@mui/material";
 
 function App() {
   const Layout = () => {
+    const navigate = useNavigate();
+
+    function logout() {
+      localStorage.clear();
+      navigate("/login");
+    }
+
     return (
       <div
         id="rootContainer"
@@ -47,12 +54,58 @@ function App() {
             <div className="w-full px-4 xl:px-4 2xl:px-5 xl:py-2 overflow-clip">
               <Outlet />
             </div>
+            <div>
+              <button onClick={logout}>Logout</button>
+            </div>
           </div>
         </div>
         <Footer />
       </div>
     );
   };
+
+  const [role, setRole] = useState("");
+  const getUserInfo = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const id = localStorage.getItem("id");
+
+      if (token) {
+        const response = await fetch(`http://localhost:3001/api/user/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const userInfo = await response.json();
+          setRole(userInfo.role);
+        } else {
+          console.error("Failed to get user information:", response.statusText);
+        }
+      } else {
+        console.error("Token not found.");
+      }
+    } catch (error) {
+      console.error("Failed to get user information:", error);
+    }
+  };
+  setInterval(
+    () => {
+      getUserInfo();
+    },
+    role == "" ? 1000 : 5000
+  );
+  const [timeoutReached, setTimeoutReached] = useState(false);
+
+  function checkTimer() {
+    if (role === "") {
+      const timer = setTimeout(() => {
+        role == "" ? setTimeoutReached(true) : setTimeoutReached(false);
+      }, 3000); // 10 seconds
+    }
+    return () => clearTimeout(timer);
+  }
 
   const router = createBrowserRouter([
     {
@@ -72,49 +125,178 @@ function App() {
           element: <EditProfile />,
         },
         {
-          path: "/freelancers/:id",
-          element: <Freelancers />,
+          path: "/freelancers",
+          element:
+            role === "AccountsAdmin" || role === "SuperAdmin" ? (
+              <Freelancers />
+            ) : checkTimer() && !timeoutReached ? (
+              <div className="flex justify-center items-center mt-[21%]">
+                <CircularProgress disableShrink />
+              </div>
+            ) : (
+              <h1
+                className="flex justify-center items-center mt-[150px] "
+                style={{ color: "red", fontWeight: "bold", fontSize: "55px" }}
+              >
+                You Are Not Authorized Here !
+              </h1>
+            ),
         },
         {
-          path: "/clients/:id",
-          element: <Clients />,
-        },
-        {
-          path: "/VIPClients/:id",
-          element: <VIPclients />,
-        },
-        {
-          path: "/projects/:id",
-          element: <Projects />,
-        },
-        {
-          path: "/users/:id",
-          element: <User />,
-        },
-        {
-          path: "/projects/:id",
-          element: <Project />,
-        },
-        {
-          path: "/reports/:id",
-          element: <Reports />,
+          path: "/clients",
+          element:
+            role === "AccountsAdmin" || role === "SuperAdmin" ? (
+              <Clients />
+            ) : checkTimer() && !timeoutReached ? (
+              <div className="flex justify-center items-center mt-[21%]">
+                <CircularProgress disableShrink />
+              </div>
+            ) : (
+              <h1
+                className="flex justify-center items-center mt-[150px] "
+                style={{ color: "red", fontWeight: "bold", fontSize: "55px" }}
+              >
+                You Are Not Authorized Here !
+              </h1>
+            ),
         },
 
         {
-          path: "/admins/:id",
-          element: <Admins />,
+          path: "/VIPClients",
+          element:
+            role === "AccountsAdmin" || role === "SuperAdmin" ? (
+              <VIPclients></VIPclients>
+            ) : checkTimer() && !timeoutReached ? (
+              <div className="flex justify-center items-center mt-[21%]">
+                <CircularProgress disableShrink />
+              </div>
+            ) : (
+              <h1
+                className="flex justify-center items-center mt-[150px] "
+                style={{ color: "red", fontWeight: "bold", fontSize: "55px" }}
+              >
+                You Are Not Authorized Here !
+              </h1>
+            ),
         },
+
         {
-          path: "/orders/:id",
-          element: <Orders />,
+          path: "/projects",
+          element:
+            role === "ProjectsAdmin" || role === "SuperAdmin" ? (
+              <Projects />
+            ) : checkTimer() && !timeoutReached ? (
+              <div className="flex justify-center items-center mt-[21%]">
+                <CircularProgress disableShrink />
+              </div>
+            ) : (
+              <h1
+                className="flex justify-center items-center mt-[150px] "
+                style={{ color: "red", fontWeight: "bold", fontSize: "55px" }}
+              >
+                You Are Not Authorized Here !
+              </h1>
+            ),
         },
+
         {
-          path: "/products/:id",
-          element: <Products />,
+          path: "/users/:id",
+          element:
+            role === "AccountsAdmin" || role === "SuperAdmin" ? (
+              <User />
+            ) : checkTimer() && !timeoutReached ? (
+              <div className="flex justify-center items-center mt-[21%]">
+                <CircularProgress disableShrink />
+              </div>
+            ) : (
+              <h1
+                className="flex justify-center items-center mt-[150px] "
+                style={{ color: "red", fontWeight: "bold", fontSize: "55px" }}
+              >
+                You Are Not Authorized Here !
+              </h1>
+            ),
         },
+
         {
-          path: "/chatRooms/:id",
-          element: <Products />,
+          path: "/reports",
+          element:
+            role === "ChatsAdmin" || role === "SuperAdmin" ? (
+              <Reports />
+            ) : checkTimer() && !timeoutReached ? (
+              <div className="flex justify-center items-center mt-[21%]">
+                <CircularProgress disableShrink />
+              </div>
+            ) : (
+              <h1
+                className="flex justify-center items-center mt-[150px] "
+                style={{ color: "red", fontWeight: "bold", fontSize: "55px" }}
+              >
+                You Are Not Authorized Here !
+              </h1>
+            ),
+        },
+
+        {
+          path: "/admins",
+          element:
+            role === "SuperAdmin" || role === "SuperAdmin" ? (
+              <Admins />
+            ) : checkTimer() && !timeoutReached ? (
+              <div className="flex justify-center items-center mt-[21%]">
+                <CircularProgress disableShrink />
+              </div>
+            ) : (
+              <h1
+                className="flex justify-center items-center mt-[150px] "
+                style={{ color: "red", fontWeight: "bold", fontSize: "55px" }}
+              >
+                You Are Not Authorized Here !
+              </h1>
+            ),
+        },
+
+        {
+          path: "/orders",
+          element:
+            role === "SuperAdmin" || role === "AccountsAdmin" ? (
+              <Orders />
+            ) : checkTimer() && !timeoutReached ? (
+              <div className="flex justify-center items-center mt-[21%]">
+                <CircularProgress disableShrink />
+              </div>
+            ) : (
+              <h1
+                className="flex justify-center items-center mt-[150px] "
+                style={{ color: "red", fontWeight: "bold", fontSize: "55px" }}
+              >
+                You Are Not Authorized Here !
+              </h1>
+            ),
+        },
+
+        {
+          path: "/products",
+          element:
+            role === "SuperAdmin" || role === "AccountsAdmin" ? (
+              <Products />
+            ) : checkTimer() && !timeoutReached ? (
+              <div className="flex justify-center items-center mt-[21%]">
+                <CircularProgress disableShrink />
+              </div>
+            ) : (
+              <h1
+                className="flex justify-center items-center mt-[150px] "
+                style={{ color: "red", fontWeight: "bold", fontSize: "55px" }}
+              >
+                You Are Not Authorized Here !
+              </h1>
+            ),
+        },
+
+        {
+          path: "/chatRoomss/:id",
+          element: <Discussion />,
         },
       ],
       errorElement: <Error />,

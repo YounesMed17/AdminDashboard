@@ -35,6 +35,10 @@ const DataTable: React.FC<DataTableProps> = ({
     freelancerId: 0,
     clientId: 0,
   });
+  const [valuesToUpdateAdmin, setValuesToUpdateAdmin] = useState<any>({
+    id: 0,
+    role: "",
+  });
   const [valuesToUpdateProduct, setValuesToUpdateProduct] = useState<any>({
     id: 0,
     productLabel: "",
@@ -48,6 +52,11 @@ const DataTable: React.FC<DataTableProps> = ({
     nickName: "",
     strikes: 0,
     statusF: "",
+  });
+
+  const [valuesToUpdateOrder, setValuesToUpdateOrder] = useState<any>({
+    id: 0,
+    statusO: "",
   });
 
   const [valuesToUpdateReport, setValuesToUpdateReport] = useState<any>({
@@ -71,12 +80,37 @@ const DataTable: React.FC<DataTableProps> = ({
       deleteData(`http://localhost:3001/api/reports/${id}`);
     }
   };
-  const handleDeleteUser = (id: number) => {
+  const handleDeleteAdmin = (id: number) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this item?"
     );
     if (confirmDelete) {
       deleteData(`http://localhost:3001/api/user/${id}`);
+    }
+  };
+  const handleDeleteOrder = (id: number) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
+    if (confirmDelete) {
+      deleteData(`http://localhost:3001/api/orders/${id}`);
+    }
+  };
+
+  const handleDeleteUser = async (id: number) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
+    if (confirmDelete) {
+      await deleteData(`http://localhost:3001/api/project/user/${id}`);
+      await deleteData(`http://localhost:3001/api/file/user/${id}`);
+      await deleteData(`http://localhost:3001/api/rate/user/${id}`);
+      await deleteData(`http://localhost:3001/api/reports/user/${id}`);
+      await deleteData(`http://localhost:3001/api/orders/user/${id}`);
+      await deleteData(
+        `http://localhost:3001/api/userskills/alluserskillsdomains/${id}`
+      );
+      await deleteData(`http://localhost:3001/api/user/${id}`);
     }
   };
   const handleDeleteProduct = (id: number) => {
@@ -146,6 +180,22 @@ const DataTable: React.FC<DataTableProps> = ({
 
         setIsOpen(true);
       };
+      const handleClickAdmin = (id: number, role: string) => {
+        setValuesToUpdateAdmin({
+          id,
+          role,
+        });
+
+        setIsOpen(true);
+      };
+      const handleClickOrder = (id: number, statusO: string) => {
+        setValuesToUpdateOrder({
+          id,
+          statusO,
+        });
+
+        setIsOpen(true);
+      };
       const handleClick = (
         id: number,
         title: string,
@@ -199,18 +249,13 @@ const DataTable: React.FC<DataTableProps> = ({
             onClick={() => navigate(`/${slug}/${params.row.id}`)}
             className="btn btn-square btn-ghost"
           >
-            {relatedTo == "products" ||
-            relatedTo == "orders" ||
-            relatedTo == "admins" ||
-            relatedTo == "reports" ? (
-              ""
-            ) : (
-              <HiOutlineEye />
-            )}
+            {relatedTo == "user" ? <HiOutlineEye /> : ""}
           </button>
           <button
             onClick={() => {
-              relatedTo == "project"
+              relatedTo == "order"
+                ? handleClickOrder(params.row.id, params.row.status)
+                : relatedTo == "project"
                 ? handleClick(
                     params.row.id,
                     params.row.name,
@@ -221,6 +266,10 @@ const DataTable: React.FC<DataTableProps> = ({
                     params.row.freelancerId,
                     params.row.clientId
                   )
+                : relatedTo == "order"
+                ? handleClickOrder(params.row.id, params.row.status)
+                : relatedTo == "admin"
+                ? handleClickAdmin(params.row.id, params.row.role)
                 : relatedTo == "report"
                 ? handleClickReport(
                     params.row.id,
@@ -253,7 +302,11 @@ const DataTable: React.FC<DataTableProps> = ({
           </button>
           <button
             onClick={() => {
-              relatedTo == "project"
+              relatedTo == "orders"
+                ? handleDeleteOrder(params.row.id)
+                : relatedTo == "admin"
+                ? handleDeleteAdmin(params.row.id)
+                : relatedTo == "project"
                 ? handleDeleteProject(
                     params.row.id,
                     params.row.clientId,
@@ -261,7 +314,7 @@ const DataTable: React.FC<DataTableProps> = ({
                   )
                 : relatedTo == "report"
                 ? handleDeleteReport(params.row.id)
-                : relatedTo == "user"
+                : relatedTo == "user" || relatedTo == "client"
                 ? handleDeleteUser(params.row.id)
                 : relatedTo == "products"
                 ? handleDeleteProduct(params.row.id)
@@ -304,12 +357,17 @@ const DataTable: React.FC<DataTableProps> = ({
         disableDensitySelector
         disableColumnSelector
       />
+
       {isOpen && (
         <ProjectData
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           values={
-            relatedTo == "project"
+            relatedTo == "order"
+              ? valuesToUpdateOrder
+              : relatedTo == "admin"
+              ? valuesToUpdateAdmin
+              : relatedTo == "project"
               ? valuesToUpdate
               : relatedTo == "report"
               ? valuesToUpdateReport

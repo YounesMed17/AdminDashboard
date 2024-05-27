@@ -1,5 +1,4 @@
-import React, {
-  ChangeEvent,
+import {
   Dispatch,
   FC,
   FormEvent,
@@ -15,7 +14,7 @@ import { Button } from "@mui/material";
 interface AddDataProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  values;
+  values: any;
   relatedTo: string;
 }
 
@@ -25,7 +24,6 @@ const ProjectData: FC<AddDataProps> = ({
   values,
   relatedTo,
 }) => {
-  console.log("dad dz  ddd" + relatedTo);
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState(values.title);
   const [totalPrice, setTotalPrice] = useState(values.totalPrice);
@@ -39,6 +37,9 @@ const ProjectData: FC<AddDataProps> = ({
   const [isHandled, setIsHandled] = useState(values.isHandled);
   const [sendStrike, setSendStrike] = useState(false);
   const [productLabel, setProductLabel] = useState(values.productLabel);
+  const [statusO, setStatusO] = useState(values.statusO);
+  const [role, setRole] = useState(values.role);
+
   const [productDescription, setProductDescription] = useState(
     values.productDescription
   );
@@ -63,7 +64,6 @@ const ProjectData: FC<AddDataProps> = ({
       }
     }
   }, [values.deadline]);
-  console.log("dzadaz" + values.strikes, strike, values.statusU, statusU);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -80,7 +80,7 @@ const ProjectData: FC<AddDataProps> = ({
         {
           type: values.type,
           reason: values.reason,
-          isHandled: true,
+          isHandled: isHandled,
           reportDate: values.reportDate,
           from: values.from,
           to: values.to,
@@ -99,7 +99,7 @@ const ProjectData: FC<AddDataProps> = ({
     if (relatedTo == "project") {
       await modifyData(
         { name: title, totalPrice, status, isPublished, deadLine: deadline },
-        `http://localhost:3001/api/report/${values.id}`
+        `http://localhost:3001/api/project/${values.id}`
       );
 
       if (values.totalPrice != totalPrice) {
@@ -123,7 +123,7 @@ const ProjectData: FC<AddDataProps> = ({
       }
 
       if (values.status != status) {
-        const id1 = await send(
+        await send(
           {
             message: `Your project status has been changed by an admin from ${values.status} to ${status}`,
             userId: values.clientId,
@@ -141,7 +141,25 @@ const ProjectData: FC<AddDataProps> = ({
         },
         `http://localhost:3001/api/products/${values.id}`
       );
-    } else if (relatedTo == "user") {
+    } else if (relatedTo == "admin") {
+      await modifyData(
+        {
+          role,
+        },
+        `http://localhost:3001/api/user/${values.id}`
+      );
+    } else if (relatedTo == "orders") {
+      await modifyData(
+        {
+          status: statusO,
+        },
+        `http://localhost:3001/api/orders/${values.id}`
+      );
+    } else if (
+      relatedTo == "user" ||
+      relatedTo == "client" ||
+      relatedTo == "VIP"
+    ) {
       await modifyData(
         {
           nickname: nickName,
@@ -214,10 +232,12 @@ const ProjectData: FC<AddDataProps> = ({
             <HiOutlineXMark className="text-xl font-bold" />
           </button>
           <span className="text-2xl font-bold">
-            {relatedTo == "user"
+            {relatedTo == "user" || relatedTo == "client" || relatedTo == "VIP"
               ? "Update user data"
               : relatedTo == "project"
               ? "Update project data"
+              : relatedTo == "admin"
+              ? "Update admin role"
               : relatedTo == "report"
               ? "Update report data"
               : ""}
@@ -339,8 +359,30 @@ const ProjectData: FC<AddDataProps> = ({
               <option value="onHold">On Hold</option>
             </select>
           </label>
+
           <label
-            className={relatedTo == "user" ? "form-control w-full" : "hidden"}
+            className={relatedTo == "admin" ? "form-control w-full" : "hidden"}
+          >
+            <div className="label">
+              <span className="label-text">Change admin role</span>
+            </div>
+            <select
+              className="select select-bordered"
+              value={role}
+              onChange={(element) => setRole(element.target.value)}
+            >
+              <option value="ProjectsAdmin">ProjectsAdmin</option>
+              <option value="ChatAdmin">ChatAdmin</option>
+              <option value="AccountsAdmin">AccountsAdmin</option>
+            </select>
+          </label>
+
+          <label
+            className={
+              relatedTo == "user" || relatedTo == "client" || relatedTo == "VIP"
+                ? "form-control w-full"
+                : "hidden"
+            }
           >
             <div className="label">
               <span className="label-text">Change nickName</span>
@@ -357,7 +399,11 @@ const ProjectData: FC<AddDataProps> = ({
           </label>
 
           <label
-            className={relatedTo == "user" ? "form-control w-full" : "hidden"}
+            className={
+              relatedTo == "user" || relatedTo == "client" || relatedTo == "VIP"
+                ? "form-control w-full"
+                : "hidden"
+            }
           >
             <div className="label">
               <span className="label-text">Update Strikes number</span>
@@ -375,7 +421,11 @@ const ProjectData: FC<AddDataProps> = ({
           </label>
 
           <label
-            className={relatedTo == "user" ? "form-control w-full" : "hidden"}
+            className={
+              relatedTo == "user" || relatedTo == "client" || relatedTo == "VIP"
+                ? "form-control w-full"
+                : "hidden"
+            }
           >
             <div className="label">
               <span className="label-text">Change status</span>
@@ -390,7 +440,22 @@ const ProjectData: FC<AddDataProps> = ({
               <option value="suspended">Suspended</option>
             </select>
           </label>
-
+          <label
+            className={relatedTo == "orders" ? "form-control w-full" : "hidden"}
+          >
+            <div className="label">
+              <span className="label-text">Change status</span>
+            </div>
+            <select
+              className="select select-bordered"
+              value={statusO}
+              onChange={(element) => setStatusO(element.target.value)}
+            >
+              <option value="pending">pending</option>
+              <option value="cancelled">cancelled</option>
+              <option value="completed">completed</option>
+            </select>
+          </label>
           <label
             className={
               relatedTo == "products" ? "form-control w-full" : "hidden"
@@ -467,7 +532,7 @@ const ProjectData: FC<AddDataProps> = ({
             } btn-block col-span-full font-semibold`}
             onClick={updateProject}
           >
-            {relatedTo == "user"
+            {relatedTo == "user" || relatedTo == "client" || relatedTo == "VIP"
               ? "Update user"
               : relatedTo == "project"
               ? "Update project"

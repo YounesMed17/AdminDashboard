@@ -1,0 +1,283 @@
+.kol{
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  height: 700px;
+  margin-left: 400px;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+.messenger {
+  height: calc(100vh - 70px);
+  display: flex;
+  width:499px;
+
+}
+
+.chatMenu {
+  flex: 3.2;
+  
+}
+.nathem{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  top: 77px;
+  
+}
+.tahtism{
+  height: calc(100vh - 70px);
+  display: flex;
+  width: 100%;
+}
+.chatMenuInput {
+  width: 9  0%;
+  padding: 10px 0;
+  border: none;
+  border-bottom: 1px solid gray;
+}
+
+.chatBox {
+  flex: 7.5;
+  height: 450px;
+}
+.chatOnline {
+  flex: 3;
+}
+
+.chatMenuWrapper,
+.chatMenuWrapper,
+.chatBoxWrapper,
+.chatOnlineWrapper {
+padding: 10px;
+height: 100%;
+}
+
+.chatBoxWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.chatBoxTop {
+  height: 100%;
+  overflow-y: scroll;
+  padding-right: 10px;
+  margin-top: 0px;
+  overflow-x: hidden;
+ 
+}
+
+.chatBoxBottom {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chatMessageInput {
+  width: 80%;
+  height: 90px;
+  padding: 10px;
+}
+
+.chatSubmitButton {
+  width: 70px;
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: teal;
+  color: white;
+}
+.noConversationText {
+  position: absolute;
+  top: 10%;
+  font-size: 40px;
+  color: rgb(224, 220, 220);
+  cursor: default;
+  padding: 40px;
+}
+.SIZE{
+  font-size: 35px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.rouge{
+  background-color: #ff4f4c;
+}
+.bleu{
+  background-color: #2f80ed;
+}
+.reportModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.reportContent {
+  width: 50%;
+  height: 50%;
+  background-color: white;
+  padding-bottom: 50px;
+  border-radius: 50px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column; /* Met les éléments en colonne */
+  justify-content: center; /* Centre les éléments verticalement */
+  align-items: center; /* Centre les éléments horizontalement */
+}
+
+.ktiba {
+  background: linear-gradient(99.26deg, #fe504b, #f9c928);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: Poppins;
+  font-size: 35px;
+  display: flex;
+  flex-direction: column; /* Met le texte en colonne */
+  justify-content: center; /* Centre le texte verticalement */
+  align-items: center; /* Centre le texte horizontalement */
+}
+
+.lowel {
+  margin-bottom: 20px; /* Réduit l'espace en bas du paragraphe */
+}
+
+form div {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+#dropdown {
+  width: 500px; /* Set the desired width */
+  height: 70px; /* Set the desired height */
+  padding: 10px; /* Adjust padding as needed */
+  border: 1px solid #ccc; /* Add border for visual clarity */
+  font-size: 16px; /* Adjust font size as needed */
+}
+
+/* Apply styles to the option elements */
+#dropdown option.dropdown {
+  width: 100%; /* Set the width to fill the select element */
+  height: 70px; /* Set the same height as the select element */
+  padding: 10px; /* Adjust padding as needed */
+  font-size: 16px; /* Adjust font size as needed */
+}
+#textInput{
+  width: 485px;
+height: 50px;
+}
+.send2 {
+  position: relative;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+  font-family: Montserrat;
+  color: #ff4f4c;
+  text-align: center;
+  display: inline-block;
+  min-width: 47px;
+}
+
+.send-wrapper {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  flex: 1;
+  justify-content: flex-start;
+ 
+}
+.frame-wrapper33 {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  flex: 1;
+  justify-content: flex-start;
+  width: 150px; /* Définissez la largeur souhaitée */
+  height: 50px;
+}
+.cancel {
+  width: 83px;
+  position: relative;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+  font-family: Montserrat;
+  color: #2f80ed;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+.cancel-wrapper {
+  flex: 1;
+  border: 2.2px solid #2f80ed;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 14px 42px;
+
+}
+.wwrapper {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 14px 26px;
+  height: 25px;
+}
+
+.wwrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2.2px solid transparent;
+  background: linear-gradient(99.26deg, #fe504b, #f9c928);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: subtract;
+  pointer-events: none; /* to make sure it doesn't interfere with the content */
+}
+
+.wwrapper > * {
+  position: relative;
+  z-index: 1; /* Ensures that the content is above the pseudo-element */
+}
+.row{
+  gap: 10px;
+}
