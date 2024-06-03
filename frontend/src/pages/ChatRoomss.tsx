@@ -3,7 +3,6 @@ import { useState, useEffect, FunctionComponent, useRef } from "react";
 import { io } from "socket.io-client";
 import "./Discussion.css";
 import "tailwindcss/tailwind.css"; // Chemin d'importation dépendant de votre configuration
-import { useParams } from "react-router-dom";
 import Conversation from "../components/Conversation";
 import Message from "../components/Message";
 
@@ -58,7 +57,6 @@ const Discussion: FunctionComponent = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [textInput, setTextInput] = useState("");
 
-  const { id } = useParams();
   useEffect(() => {
     Socket.current = io("ws://localhost:8900");
     Socket.current.on(

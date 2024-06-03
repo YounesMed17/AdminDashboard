@@ -80,7 +80,7 @@ export const menu = [
       },
       {
         isLink: true,
-        url: "/chatRooms/:id",
+        url: "/chatRoomss/:id",
         icon: HiOutlineCube,
         label: "Chat Rooms",
       },
